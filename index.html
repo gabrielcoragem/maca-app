@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Maca App | Protocolo Gold</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        cream: '#FFFBF0',
+                        ink: '#264653',
+                        terracotta: '#E76F51',
+                        teal: '#2A9D8F',
+                        mustard: '#E9C46A',
+                        forest: '#264653',
+                    },
+                    borderRadius: {
+                        'organic-card': '30px 80px 30px 60px',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FFFBF0;
+            color: #264653;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden; 
+            min-height: 100vh;
+        }
+        .shape-blob {
+            position: absolute;
+            border-radius: 50%;
+            z-index: 0;
+        }
+        .custom-range {
+            -webkit-appearance: none; 
+            background: transparent; 
+            width: 100%;
+        }
+        .custom-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 28px;
+            width: 28px;
+            border-radius: 50%;
+            background: #E76F51;
+            border: 4px solid #FFFBF0;
+            margin-top: -10px;
+            cursor: pointer;
+        }
+        .custom-range::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8px;
+            background: #E0E0E0;
+            border-radius: 999px;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .accordion-content {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .accordion-content.active {
+            max-height: 500px;
+            opacity: 1;
+        }
+        .rotate-chevron { transition: transform 0.3s ease; }
+        .rotate-chevron.active { transform: rotate(180deg); }
+    </style>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="h-screen w-full relative">
+
+    <!-- Background Shapes -->
+    <div class="shape-blob bg-mustard/20 w-96 h-96 -top-20 -right-20 rounded-bl-full"></div>
+    <div class="shape-blob bg-teal/20 w-80 h-80 top-40 -left-20 rounded-r-full"></div>
+    <div class="shape-blob bg-terracotta/10 w-full h-64 bottom-0 left-0 rounded-t-[100px]"></div>
+
+    <!-- App Container -->
+    <div id="app" class="h-full w-full relative z-10 overflow-hidden flex flex-col">
+        
+        <!-- ================= VIEW: LOADING ================= -->
+        <section id="view-loading" class="h-full flex flex-col justify-center items-center absolute inset-0 z-50 bg-cream">
+             <div class="w-20 h-20 bg-terracotta rounded-full flex items-center justify-center mb-6 text-cream text-3xl shadow-lg animate-pulse-slow">
+                <i class="fa-solid fa-flask"></i>
+            </div>
+            <p class="text-ink/50 font-medium text-sm uppercase tracking-widest animate-pulse">Carregando...</p>
+        </section>
+
+        <!-- ================= VIEW: LOGIN ================= -->
+        <section id="view-login" class="h-full flex flex-col justify-center items-center px-8 animate-fade-in relative z-20 hidden">
+            <div class="w-24 h-24 bg-terracotta rounded-full flex items-center justify-center mb-6 text-cream text-4xl shadow-none">
+                <i class="fa-solid fa-flask"></i>
+            </div>
+
+            <h1 class="text-4xl font-bold text-ink mb-2 tracking-tight text-center">MacaApp</h1>
+            <p class="text-ink/60 font-medium mb-10 text-sm uppercase tracking-widest text-center">Área Exclusiva de Membros</p>
+
+            <form onsubmit="handleLogin(event)" class="w-full max-w-xs space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-ink/40 uppercase mb-2 ml-2">E-mail de Compra</label>
+                    <input id="email-input" type="email" required class="w-full bg-white border-2 border-ink/10 rounded-2xl px-6 py-4 text-ink placeholder-ink/30 focus:border-terracotta focus:outline-none transition-colors font-medium" placeholder="seu@email.com">
+                </div>
+                
+                <button type="submit" class="w-full py-5 rounded-full bg-ink text-cream font-bold text-sm uppercase tracking-wider hover:bg-terracotta transition-colors shadow-none mt-4">
+                    <span id="btn-login-text">ACESSAR MEU PROTOCOLO</span>
+                    <div id="btn-login-loading" class="hidden flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-circle-notch fa-spin"></i> ENVIANDO LINK...
+                    </div>
+                </button>
+                
+                <div id="login-feedback" class="hidden bg-green-100 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-xs text-center font-bold mt-4 animate-fade-in">
+                    <i class="fa-solid fa-check-circle mb-1 text-lg"></i><br>
+                    Verifique seu e-mail!<br>Enviamos um link mágico de acesso.
+                </div>
+            </form>
+        </section>
+
+        <!-- ================= VIEW: DASHBOARD ================= -->
+        <section id="view-home" class="hidden h-full flex-col px-6 pt-10 pb-6 animate-fade-in relative z-20">
+            <!-- Header -->
+            <div class="flex justify-between items-start mb-8 relative">
+                <div>
+                    <h2 class="text-[10px] font-bold text-ink/40 uppercase tracking-[0.2em] mb-1">MEMBRO VIP CONFIRMADO</h2>
+                    <h1 class="text-3xl font-bold text-terracotta leading-none">Olá, <span id="user-display-name">Alfa</span>.</h1>
+                </div>
+                <div class="relative">
+                    <button onclick="toggleUserMenu()" class="w-12 h-12 bg-white rounded-full border-2 border-ink/10 flex items-center justify-center text-ink text-lg active:scale-95 transition-transform z-30 relative shadow-sm">
+                        <i class="fa-solid fa-user"></i>
+                    </button>
+                    <!-- Dropdown -->
+                    <div id="user-menu" class="hidden absolute right-0 top-14 w-64 bg-white rounded-2xl shadow-xl border-2 border-ink/5 overflow-hidden z-50 animate-fade-in origin-top-right">
+                        <div class="px-6 py-4 border-b border-ink/5 bg-gray-50">
+                             <p class="text-[10px] uppercase text-ink/40 font-bold mb-1">Logado como</p>
+                             <p id="user-email-menu" class="text-xs font-bold text-ink truncate">usuario@email.com</p>
+                        </div>
+                        <button onclick="handleLogout()" class="w-full text-left px-6 py-4 text-red-500 font-bold hover:bg-red-50 transition-colors flex items-center gap-3 text-sm">
+                            <i class="fa-solid fa-power-off"></i> Sair do App
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cards Grid (Horizontal) -->
+            <div class="flex-1 overflow-y-auto no-scrollbar grid grid-cols-1 gap-5 pb-20">
+                
+                <!-- Card 1 -->
+                <div onclick="openModule('maca')" class="bg-terracotta rounded-organic-card p-6 flex items-center gap-5 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform shadow-lg shadow-terracotta/30 min-h-[120px]">
+                    <div class="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center shrink-0 text-cream text-2xl"><i class="fa-solid fa-flask"></i></div>
+                    <div class="flex-1 min-w-0 text-left">
+                        <h3 class="text-xl font-bold text-cream leading-tight">Maca App: Protocolo Gold</h3>
+                        <p class="text-[10px] font-bold text-cream/80 uppercase tracking-widest mt-2">A Dosagem Oficial</p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div onclick="openModule('size')" class="bg-teal rounded-tr-[60px] rounded-bl-[40px] rounded-tl-[30px] rounded-br-[30px] p-6 flex items-center gap-5 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform shadow-lg shadow-teal/30 min-h-[120px]">
+                    <div class="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center shrink-0 text-cream text-2xl"><i class="fa-solid fa-ruler-vertical"></i></div>
+                    <div class="flex-1 min-w-0 text-left">
+                        <h3 class="text-xl font-bold text-cream leading-tight">Bônus: Pau de Cavalo</h3>
+                        <p class="text-[10px] font-bold text-cream/80 uppercase tracking-widest mt-2">Expansão Cavernosa</p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div onclick="openModule('testo')" class="bg-mustard rounded-tl-[60px] rounded-br-[40px] rounded-tr-[30px] rounded-bl-[30px] p-6 flex items-center gap-5 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform shadow-lg shadow-mustard/30 min-h-[120px]">
+                    <div class="w-14 h-14 rounded-full bg-black/10 flex items-center justify-center shrink-0 text-ink text-2xl"><i class="fa-solid fa-bolt"></i></div>
+                    <div class="flex-1 min-w-0 text-left">
+                        <h3 class="text-xl font-bold text-ink leading-tight">Bônus: Fonte da Juventude</h3>
+                        <p class="text-[10px] font-bold text-ink/70 uppercase tracking-widest mt-2">Nutrição de Testo</p>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div onclick="openModule('control')" class="bg-forest rounded-[40px] p-6 flex items-center gap-5 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform shadow-lg shadow-forest/30 min-h-[120px]">
+                    <div class="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center shrink-0 text-cream text-2xl"><i class="fa-solid fa-stopwatch"></i></div>
+                    <div class="flex-1 min-w-0 text-left">
+                        <h3 class="text-xl font-bold text-cream leading-tight">Bônus: Controle Total</h3>
+                        <p class="text-[10px] font-bold text-cream/80 uppercase tracking-widest mt-2">Técnica Anti-Gozagem</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= VIEW: READER ================= -->
+        <section id="view-player" class="hidden h-full flex flex-col absolute inset-0 z-50 animate-pop-in bg-cream">
+            <div class="shrink-0 px-6 pt-8 pb-4 flex justify-between items-center z-20 bg-cream/90 backdrop-blur-sm border-b border-ink/5">
+                <button onclick="closeModule()" class="w-10 h-10 rounded-full bg-white border-2 border-ink/10 flex items-center justify-center text-ink hover:bg-ink/5 transition"><i class="fa-solid fa-arrow-left"></i></button>
+                <div class="text-right">
+                    <h4 id="player-title" class="text-xs font-bold text-ink/40 uppercase tracking-widest">Módulo</h4>
+                    <span id="player-counter" class="text-xl font-bold text-ink">01/11</span>
+                </div>
+            </div>
+            <div id="player-content" class="flex-1 flex flex-col justify-start px-6 pt-6 pb-32 overflow-y-auto no-scrollbar scroll-smooth"></div>
+            <div class="fixed bottom-0 left-0 w-full p-6 pb-8 z-30 bg-gradient-to-t from-cream via-cream to-transparent pointer-events-none">
+                <div class="flex gap-4 pointer-events-auto max-w-md mx-auto">
+                    <button id="btn-prev" onclick="prevPage()" class="w-16 h-16 rounded-2xl border-2 border-ink/10 bg-white text-ink/50 font-bold flex items-center justify-center disabled:opacity-0 transition-all shadow-sm"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button id="btn-next" onclick="nextPage()" class="flex-1 h-16 rounded-2xl bg-ink text-cream font-bold text-sm uppercase tracking-wider shadow-lg shadow-ink/20 active:scale-95 transition-transform flex items-center justify-center gap-2">Próximo</button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // --- 1. SUPABASE CONFIGURATION (REAL CREDENTIALS) ---
+        const SUPABASE_URL = 'https://cjhytxkauboiotcmogne.supabase.co'; 
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNqaHl0eGthdWJvaW90Y21vZ25lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA1MjI0OTgsImV4cCI6MjA4NjA5ODQ5OH0.hzCYIiEFOkCzDRsMa186vbZMrOE4_EMj1S1x3GQAteo';
+        
+        // --- 2. CLIENT INITIALIZATION (SAFE) ---
+        let sbClient = null;
+        if (typeof window.supabase !== 'undefined') {
+            sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        } else {
+            console.error("Supabase SDK not loaded properly from CDN");
+            document.getElementById('view-loading').innerHTML = '<div class="text-center p-6"><p class="text-terracotta font-bold mb-2">Erro de Conexão</p><p class="text-sm text-ink/60">Verifique sua internet e recarregue.</p></div>';
+        }
+
+        // --- 3. AUTH LOGIC ---
+        async function handleLogin(e) {
+            e.preventDefault();
+            if (!sbClient) return alert("Erro crítico: Sistema não inicializado.");
+
+            const email = document.getElementById('email-input').value;
+            if(!email) return alert("Digite seu e-mail.");
+            
+            // UI States
+            const btnText = document.getElementById('btn-login-text');
+            const btnLoading = document.getElementById('btn-login-loading');
+            const feedback = document.getElementById('login-feedback');
+
+            btnText.classList.add('hidden');
+            btnLoading.classList.remove('hidden');
+            feedback.classList.add('hidden');
+
+            try {
+                const { error } = await sbClient.auth.signInWithOtp({ 
+                    email: email,
+                    options: {
+                        emailRedirectTo: window.location.href // Redirect back to this app
+                    }
+                });
+
+                if (error) throw error;
+                
+                // Show Success Feedback
+                feedback.classList.remove('hidden');
+                
+            } catch (error) {
+                alert("Erro ao entrar: " + error.message);
+                btnText.classList.remove('hidden');
+                btnLoading.classList.add('hidden');
+            }
+        }
+
+        async function handleLogout() {
+            if (sbClient) await sbClient.auth.signOut();
+            toggleUserMenu();
+        }
+
+        function toggleUserMenu() {
+            document.getElementById('user-menu').classList.toggle('hidden');
+        }
+
+        // --- 4. SESSION MANAGEMENT ---
+        window.onload = async () => {
+            if (!sbClient) return;
+
+            try {
+                // Check initial session
+                const { data } = await sbClient.auth.getSession();
+                updateSessionState(data.session);
+
+                // Listen for auth changes (magic link click)
+                sbClient.auth.onAuthStateChange((event, session) => {
+                    if (event === 'SIGNED_IN') {
+                        updateSessionState(session);
+                    } else if (event === 'SIGNED_OUT') {
+                        updateSessionState(null);
+                    }
+                });
+            } catch (error) {
+                console.error("Auth Error:", error);
+                updateSessionState(null);
+            }
+        };
+
+        function updateSessionState(session) {
+            // Hide Loading Screen
+            document.getElementById('view-loading').classList.add('hidden');
+
+            if (session) {
+                // User is Logged In
+                document.getElementById('view-login').classList.add('hidden');
+                document.getElementById('view-home').classList.remove('hidden');
+                document.getElementById('view-home').classList.add('flex');
+                
+                document.getElementById('user-email-menu').innerText = session.user.email;
+                
+                // Try to get name or use default
+                let displayName = "Alfa";
+                if(session.user.user_metadata?.full_name) {
+                    displayName = session.user.user_metadata.full_name.split(' ')[0];
+                } else if (session.user.email) {
+                    displayName = session.user.email.split('@')[0];
+                }
+                document.getElementById('user-display-name').innerText = displayName;
+
+            } else {
+                // User is Logged Out
+                document.getElementById('view-home').classList.add('hidden');
+                document.getElementById('view-home').classList.remove('flex');
+                document.getElementById('view-player').classList.add('hidden');
+                document.getElementById('view-login').classList.remove('hidden');
+                
+                // Reset Login UI
+                document.getElementById('btn-login-text').classList.remove('hidden');
+                document.getElementById('btn-login-loading').classList.add('hidden');
+                document.getElementById('login-feedback').classList.add('hidden');
+            }
+        }
+
+        // --- 5. CONTENT DATA ---
+        const recipeList = [
+            { title: "O Clássico (Shot)", icon: "fa-glass-water", color: "bg-terracotta", ingredients: ["Sua dose de Maca", "50ml de água natural"], prep: "Dilua o pó em pouca água. Tome de um gole só.", tip: "Rápido e eficiente." },
+            { title: "Shake Anabólico", icon: "fa-blender", color: "bg-teal", ingredients: ["Dose de Maca", "1 banana congelada", "200ml leite vegetal", "1 scoop Whey"], prep: "Bata tudo no liquidificador.", tip: "Use canela para acelerar metabolismo." },
+            { title: "Café Turbo", icon: "fa-mug-hot", color: "bg-ink", ingredients: ["Dose de Maca", "1 xícara café (morno)", "1 colher óleo de coco"], prep: "Bata com mixer até espumar.", tip: "Gordura protege o estômago." },
+            { title: "Power-Cacau", icon: "fa-cookie", color: "bg-mustard", ingredients: ["Dose de Maca", "1 colher Cacau 100%", "Leite morno"], prep: "Misture os pós, adicione leite.", tip: "Cacau aumenta fluxo sanguíneo." },
+            { title: "Suco de Beterraba", icon: "fa-heart-pulse", color: "bg-terracotta", ingredients: ["Dose de Maca", "1/2 beterraba crua", "200ml água"], prep: "Bata e coe.", tip: "Vasodilatador natural potente." },
+            { title: "Overnight Oats", icon: "fa-bowl-rice", color: "bg-teal", ingredients: ["Dose de Maca", "3 colheres aveia", "Iogurte", "Chia"], prep: "Deixe na geladeira a noite toda.", tip: "Café da manhã pronto." },
+            { title: "Pasta de Mel", icon: "fa-jar", color: "bg-mustard", ingredients: ["Dose de Maca", "1 colher Mel"], prep: "Misture na xícara até virar pasta.", tip: "Disfarça 100% o gosto de terra." },
+            { title: "Vitamina Abacate", icon: "fa-carrot", color: "bg-forest", ingredients: ["Dose de Maca", "1/4 abacate", "Limão", "Água"], prep: "Bata bem.", tip: "Gordura boa ajuda na absorção." },
+            { title: "Limonada Suíça", icon: "fa-lemon", color: "bg-teal", ingredients: ["Dose de Maca", "1 limão com casca", "Água"], prep: "Bata e beba na hora.", tip: "Refrescante e corta o amargo." },
+            { title: "Mix Especiarias", icon: "fa-pepper-hot", color: "bg-terracotta", ingredients: ["Dose de Maca", "Gengibre", "Canela", "Água morna"], prep: "Misture tudo.", tip: "Termogênico natural." }
+        ];
+
+        const modulesData = {
+            maca: {
+                title: "Protocolo Vital",
+                themeColor: "text-terracotta",
+                borderClass: "border-terracotta",
+                pages: [
+                    { title: "Bem-vindo à Elite", icon: "fa-seedling", text: "Você adquiriu um ativador biológico. A Maca Peruana, quando pura, é informação para suas células. Esqueça 'farinhas' de mercado. Vamos calibrar sua máquina." },
+                    { title: "O Endotélio", icon: "fa-dna", text: "A ereção é hidráulica. Para o sangue entrar, a porta precisa abrir. Essa porta é o 'Endotélio'. A Maca carrega Macamidas que obrigam o endotélio a produzir Óxido Nítrico." },
+                    { title: "Água vs Sucos", icon: "fa-glass-water", text: "Regra de ouro: ÁGUA FILTRADA.<br><br><b>❌ Leite:</b> Cálcio bloqueia Zinco.<br><b>❌ Cítricos:</b> Acidez oxida fitoquímicos.<br><b>✅ Água:</b> Neutra e perfeita." },
+                    { title: "Temperatura Fatal", icon: "fa-temperature-low", text: "Jamais use água fervendo. O calor acima de 60°C cozinha as enzimas. Se fizer chá de ervas, <b>ESPERE AMORNAR</b> antes de misturar a Maca." },
+                    { title: "A Mistura", icon: "fa-blender", text: "Técnica da Pastinha: Coloque a dose no copo SECO. Adicione um 'dedinho' de água. Mexa até virar uma lama homogênea. Só depois complete o copo." },
+                    { title: "Horário", icon: "fa-clock", text: "Seu pico de Testosterona é entre 06:00 e 08:00. O Protocolo exige ingestão MATINAL em jejum." },
+                    { title: "Jejum vs Alimentado", icon: "fa-utensils", text: "Para absorção de 100%, o ideal é em JEJUM, 20 minutos antes do café. Se tem gastrite: tome logo após o café." },
+                    { title: "Ciclo de Saturação", icon: "fa-calendar-check", text: "Não é efeito imediato. Funciona por SATURAÇÃO. Você precisa tomar por 21 dias seguidos para 'encharcar' seus tecidos." },
+                    { title: "Pausa 21/3", icon: "fa-pause-circle", text: "O corpo cria tolerância. Use o ciclo <b>21 ON / 3 OFF</b>. Tome 21 dias. Pare 3 dias. Retome. Isso mantem seus receptores sensíveis." },
+                    { type: "calculator" },
+                    { type: "master-summary", 
+                      content: {
+                          concept: "A Maca é combustível para o Endotélio (Óxido Nítrico).",
+                          practice: "Água filtrada, morna ou fria. Nunca fervendo. Técnica da pastinha.",
+                          routine: "Todos os dias em Jejum (07:00). Ciclo 21 dias ON, 3 OFF."
+                      }
+                    }
+                ]
+            },
+            size: {
+                title: "Aumento Natural",
+                themeColor: "text-teal",
+                borderClass: "border-teal",
+                pages: [
+                    { title: "Anatomia", icon: "fa-ruler", text: "O pênis não é músculo, é uma esponja. O tamanho é determinado pela capacidade dessa esponja de reter sangue." },
+                    { title: "Micro-Lesão", icon: "fa-microscope", text: "O Jelqing cria micro-fissuras saudáveis no tecido cavernoso. Ao cicatrizar, ele expande. Similar à musculação." },
+                    { title: "Segurança", icon: "fa-shield-halved", text: "<b>Dor = PARE.</b> O objetivo é estimular, não destruir. Nunca faça com ereção 100% (risco de lesão)." },
+                    { title: "Aquecimento", icon: "fa-fire", text: "Toalha morna na base por 2 min antes. Dilata os vasos e previne lesões no tecido frio." },
+                    { title: "Lubrificação", icon: "fa-droplet", text: "O atrito é inimigo. Use óleo de coco ou lubrificante. A mão deve deslizar suavemente." },
+                    { title: "Grip 'OK'", icon: "fa-hand-holding", text: "Sinal de 'OK' na base com ereção a 60-70%. Pressão firme, mas confortável." },
+                    { title: "Ordenha", icon: "fa-arrows-up-down", text: "Deslize da base até a glande (3 segundos). Imagine empurrar o sangue para frente." },
+                    { title: "Fluxo", icon: "fa-arrow-up", text: "Sempre da base para a ponta. Solte a mão ao chegar na glande e reinicie com a outra mão." },
+                    { title: "Frequência", icon: "fa-calendar", text: "Iniciantes: 5-10 min, 3x por semana. O descanso é quando o crescimento acontece." },
+                    { title: "Pós-Treino", icon: "fa-snowflake", text: "Termine com água fria ou toalha fria por 1 min. Ajuda a fechar vasos superficiais." },
+                    { type: "master-summary", 
+                      content: {
+                          concept: "Hipertrofia do tecido cavernoso via micro-lesão controlada.",
+                          practice: "Ereção 70%. Lubrificação total. Nunca a seco.",
+                          routine: "Aquecimento (2min) -> 100 repetições -> Resfriamento."
+                      }
+                    }
+                ]
+            },
+            testo: {
+                title: "Hormônios & Energia",
+                themeColor: "text-mustard",
+                borderClass: "border-mustard",
+                pages: [
+                    { title: "A Crise", icon: "fa-arrow-trend-down", text: "Homens hoje têm 50% menos testosterona que seus avós. Plásticos e sedentarismo são os culpados." },
+                    { title: "Mito do Colesterol", icon: "fa-burger", text: "A molécula de Testosterona é feita de COLESTEROL. Sem gordura boa, não há hormônios." },
+                    { title: "Inimigo Estrogênio", icon: "fa-skull-crossbones", text: "Plásticos (BPA) e gordura corporal convertem sua Testo em hormônio feminino." },
+                    { title: "Ovos Inteiros", icon: "fa-egg", text: "Coma 3 a 4 ovos inteiros/dia. A gema é rica em colesterol bom e Vitamina D." },
+                    { title: "O Faxineiro", icon: "fa-leaf", text: "Brócolis ajuda o fígado a eliminar o excesso de estrogênio do corpo." },
+                    { title: "Zinco", icon: "fa-key", text: "Sem Zinco, a produção para. Carne vermelha e semente de abóbora são ótimas fontes." },
+                    { title: "Sol Esteroidal", icon: "fa-sun", text: "15 min de sol no peito/costas. Vitamina D funciona como pré-hormônio." },
+                    { title: "Sono Anabólico", icon: "fa-bed", text: "Você produz testo dormindo. Durma antes das 23h para pegar o pico de GH." },
+                    { title: "Força Bruta", icon: "fa-dumbbell", text: "Exercícios compostos (Agachamento, Terra) obrigam o corpo a produzir mais hormônio." },
+                    { title: "Compras", icon: "fa-cart-shopping", text: "Ovos, Brócolis, Carne Vermelha, Abacate, Castanhas." },
+                    { type: "master-summary", 
+                      content: {
+                          concept: "Colesterol é matéria-prima. Estrogênio é o bloqueio.",
+                          practice: "3 Ovos/dia. Brócolis. Sol (Vit D).",
+                          routine: "Dieta rica em gordura boa. Treino de força pesado."
+                      }
+                    }
+                ]
+            },
+            control: {
+                title: "Controle Total",
+                themeColor: "text-forest",
+                borderClass: "border-forest",
+                pages: [
+                    { title: "O Botão", icon: "fa-circle-exclamation", text: "Ejaculação é Sistema Simpático (Luta/Fuga). Para durar, ative o Parassimpático (Relaxamento)." },
+                    { title: "Ansiedade", icon: "fa-brain", text: "O medo de falhar gera adrenalina, que acelera o processo. Foque na sensação, não no tempo." },
+                    { title: "Escala 0-10", icon: "fa-gauge-high", text: "Identifique seu ponto sem retorno (Nível 9). Navegue entre 6 e 8. Chegou no 8? Pare." },
+                    { title: "Respiração 4-7-8", icon: "fa-lungs", text: "Inspire 4s, Segure 7s, Solte 8s. Isso força o coração a desacelerar imediatamente." },
+                    { title: "Chá Calmante", icon: "fa-mug-hot", text: "Camomila + Mulungu 40 min antes. Reduz a excitabilidade neural." },
+                    { title: "Dessensibilização", icon: "fa-hand-sparkles", text: "No banho, deixe água morna cair na glande. Acostume o cérebro com o estímulo." },
+                    { title: "Stop-Start", icon: "fa-hand", text: "Treino solo: Vá até o nível 8. Pare total. Baixe para 4. Volte. Repita 3x." },
+                    { title: "Músculo PC", icon: "fa-anchor", text: "Muitos contraem o períneo na hora H. Aprenda a RELAXAR o ânus durante o sexo." },
+                    { title: "Foco Dissociativo", icon: "fa-eye-slash", text: "Quando for explodir, pense em algo chato (Excel, Tabuada) por 10s." },
+                    { title: "Treino", icon: "fa-bullseye", text: "Use a masturbação como treino de resistência, não para finalizar rápido." },
+                    { type: "master-summary", 
+                      content: {
+                          concept: "Ativar o sistema de relaxamento (Parassimpático) para frear o gozo.",
+                          practice: "Respiração 4-7-8. Stop-Start.",
+                          routine: "Treino semanal de controle. Chá calmante antes."
+                      }
+                    }
+                ]
+            }
+        };
+
+        // --- 5. UI LOGIC ---
+        let activeModuleId = null;
+        let activePageIndex = 0;
+
+        function openModule(moduleId) {
+            activeModuleId = moduleId;
+            activePageIndex = 0;
+            renderPage();
+            document.getElementById('view-player').classList.remove('hidden');
+            document.getElementById('user-menu').classList.add('hidden');
+        }
+
+        function closeModule() {
+            document.getElementById('view-player').classList.add('hidden');
+            activeModuleId = null;
+        }
+
+        function renderPage() {
+            const data = modulesData[activeModuleId];
+            const pageData = data.pages[activePageIndex];
+            const container = document.getElementById('player-content');
+            
+            container.scrollTop = 0; // Reset scroll
+
+            document.getElementById('player-title').innerText = data.title;
+            document.getElementById('player-counter').innerText = `${String(activePageIndex + 1).padStart(2, '0')}/${data.pages.length}`;
+
+            const btnNext = document.getElementById('btn-next');
+            const btnPrev = document.getElementById('btn-prev');
+            btnPrev.disabled = activePageIndex === 0;
+
+            if (pageData.type === 'master-summary') {
+                btnNext.classList.add('hidden');
+            } else {
+                btnNext.classList.remove('hidden');
+                btnNext.innerHTML = 'Próximo';
+                btnNext.onclick = nextPage;
+            }
+
+            // Render Logic
+            container.innerHTML = "";
+            if (pageData.type === 'calculator') renderCalculator(container);
+            else if (pageData.type === 'master-summary') renderMasterSummary(container, pageData, data.themeColor, data.borderClass);
+            else renderStandardPage(container, pageData);
+        }
+
+        function renderStandardPage(container, data) {
+            container.innerHTML = `
+                <div class="animate-fade-in text-center flex flex-col items-center mt-4">
+                    <div class="w-24 h-24 bg-white border-2 border-ink/10 rounded-full flex items-center justify-center mb-8 text-4xl text-terracotta shadow-sm">
+                        <i class="fa-solid ${data.icon}"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-ink mb-6 leading-tight">${data.title}</h3>
+                    <div class="bg-white p-6 rounded-[30px] shadow-none border-2 border-ink/5">
+                        <p class="text-ink/80 text-lg leading-relaxed font-medium">${data.text}</p>
+                    </div>
+                </div>`;
+        }
+
+        function renderMasterSummary(container, data, themeColor, borderClass) {
+            container.innerHTML = `
+                <div class="animate-fade-in w-full text-left pb-10">
+                    <h2 class="text-2xl font-bold text-ink mb-8 text-center uppercase tracking-widest border-b-2 border-ink/10 pb-4">Resumo Mestre</h2>
+                    <div class="bg-white p-6 rounded-r-2xl border-l-[6px] ${borderClass} shadow-sm mb-6 flex flex-col gap-3">
+                        <h3 class="text-lg font-bold ${themeColor} flex items-center gap-2 uppercase tracking-wider"><i class="fa-solid fa-lightbulb"></i> O Conceito</h3>
+                        <p class="text-ink/80 leading-relaxed font-medium text-base">${data.content.concept}</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-r-2xl border-l-[6px] ${borderClass} shadow-sm mb-6 flex flex-col gap-3">
+                        <h3 class="text-lg font-bold ${themeColor} flex items-center gap-2 uppercase tracking-wider"><i class="fa-solid fa-hand-fist"></i> A Prática</h3>
+                        <p class="text-ink/80 leading-relaxed font-medium text-base">${data.content.practice}</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-r-2xl border-l-[6px] ${borderClass} shadow-sm mb-8 flex flex-col gap-3">
+                        <h3 class="text-lg font-bold ${themeColor} flex items-center gap-2 uppercase tracking-wider"><i class="fa-solid fa-calendar-check"></i> A Rotina</h3>
+                        <p class="text-ink/80 leading-relaxed font-medium text-base">${data.content.routine}</p>
+                    </div>
+                    <button onclick="closeModule()" class="w-full py-5 rounded-full bg-ink text-cream font-bold text-sm uppercase tracking-wider shadow-xl hover:bg-terracotta active:scale-95 transition-all flex items-center justify-center gap-3"><i class="fa-solid fa-check-circle"></i> Concluir Módulo</button>
+                </div>`;
+        }
+
+        function renderCalculator(container) {
+            container.innerHTML = `
+                <div class="animate-fade-in w-full mt-4">
+                    <div class="bg-white border-2 border-ink/10 rounded-[40px] p-6 shadow-sm">
+                        <div class="text-center mb-6">
+                            <i class="fa-solid fa-calculator text-3xl text-ink mb-2"></i>
+                            <h3 class="text-xl font-bold text-ink uppercase tracking-wider">Calculadora</h3>
+                        </div>
+                        <div id="calc-form" class="space-y-8">
+                            <div><div class="flex justify-between font-bold text-ink mb-2"><span>IDADE</span> <span id="lbl-age" class="text-terracotta">30 anos</span></div><input type="range" min="18" max="80" value="30" class="custom-range" oninput="updateCalcLabel('age', this.value, 'anos')"></div>
+                            <div><div class="flex justify-between font-bold text-ink mb-2"><span>PESO</span> <span id="lbl-weight" class="text-terracotta">80 kg</span></div><input type="range" min="50" max="150" value="80" class="custom-range" oninput="updateCalcLabel('weight', this.value, 'kg')"></div>
+                            <div><div class="flex justify-between font-bold text-ink mb-2"><span>ALTURA</span> <span id="lbl-height" class="text-terracotta">175 cm</span></div><input type="range" min="150" max="210" value="175" class="custom-range" oninput="updateCalcLabel('height', this.value, 'cm')"></div>
+                            <button onclick="runCalc()" class="w-full py-4 rounded-full bg-terracotta text-cream font-bold text-lg hover:bg-ink transition-colors mt-4 shadow-lg shadow-terracotta/30">Calcular Agora</button>
+                        </div>
+                        <div id="calc-result" class="hidden text-center animate-fade-in">
+                             <p class="text-sm font-bold text-ink/50 uppercase mb-2">Sua Dose Diária</p>
+                             <div class="text-6xl font-bold text-ink mb-2 tracking-tighter" id="res-grams">5.0g</div>
+                             <div class="bg-cream rounded-2xl p-4 text-ink font-medium border-2 border-ink/5 mb-8"><i class="fa-solid fa-glass-water text-teal mr-2"></i> Misturar em <b id="res-water">200</b>ml de água.</div>
+                             <div class="text-left animate-slide-up"><h4 class="text-lg font-bold text-ink mb-4 flex items-center gap-2"><i class="fa-solid fa-book-open text-terracotta"></i> 10 Formas de Uso</h4><div id="recipes-container" class="space-y-4"></div></div>
+                             <button onclick="resetCalc()" class="w-full py-4 mt-8 rounded-full border-2 border-ink/10 text-ink/40 font-bold uppercase hover:text-terracotta hover:border-terracotta transition-colors">Recalcular</button>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        function nextPage() {
+            if (activePageIndex < modulesData[activeModuleId].pages.length - 1) {
+                activePageIndex++;
+                renderPage();
+            }
+        }
+        function prevPage() {
+            if (activePageIndex > 0) {
+                activePageIndex--;
+                renderPage();
+            }
+        }
+        function updateCalcLabel(id, val, unit) { document.getElementById(`lbl-${id}`).innerText = `${val} ${unit}`; }
+        function toggleRecipe(index) {
+            const content = document.getElementById(`recipe-content-${index}`);
+            const chevron = document.getElementById(`recipe-chevron-${index}`);
+            content.classList.toggle('active');
+            chevron.classList.toggle('active');
+        }
+        function resetCalc() {
+            document.getElementById('calc-result').classList.add('hidden');
+            document.getElementById('calc-form').classList.remove('hidden');
+        }
+        function runCalc() {
+            const age = parseInt(document.getElementById('lbl-age').innerText);
+            const weight = parseInt(document.getElementById('lbl-weight').innerText);
+            let dose = (weight * 0.06); 
+            if(age > 45) dose += 1;
+            dose = Math.max(3, Math.min(10, dose)).toFixed(1);
+            let waterRaw = dose * 30;
+            let waterRounded = Math.max(200, Math.ceil(waterRaw / 50) * 50);
+
+            document.getElementById('res-grams').innerText = dose + "g";
+            document.getElementById('res-water').innerText = waterRounded;
+
+            const recipesHtml = recipeList.map((r, i) => `
+                <div class="${r.color} rounded-tr-[30px] rounded-bl-[20px] rounded-tl-[10px] rounded-br-[10px] text-white overflow-hidden shadow-md cursor-pointer transition-transform active:scale-[0.99]" onclick="toggleRecipe(${i})">
+                    <div class="p-5 flex items-center justify-between relative z-10">
+                        <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0"><i class="fa-solid ${r.icon} text-lg"></i></div><h5 class="font-bold leading-tight text-sm uppercase tracking-wide">${i+1}. ${r.title}</h5></div>
+                        <i id="recipe-chevron-${i}" class="fa-solid fa-chevron-down rotate-chevron"></i>
+                    </div>
+                    <div id="recipe-content-${i}" class="accordion-content bg-white/10 backdrop-blur-sm border-t border-white/10">
+                         <div class="p-5 pt-2">
+                            <p class="text-xs font-bold opacity-70 mb-2 uppercase tracking-wider">Ingredientes:</p>
+                            <ul class="list-disc list-inside text-sm font-medium mb-4 opacity-90 pl-2">${r.ingredients.map(ing => `<li>${ing}</li>`).join('')}</ul>
+                            <p class="text-xs font-bold opacity-70 mb-2 uppercase tracking-wider">Preparo:</p>
+                            <p class="text-sm font-medium mb-4 opacity-90 leading-relaxed bg-white/10 p-3 rounded-lg">${r.prep}</p>
+                            <div class="bg-white text-ink p-3 rounded-xl flex gap-3 items-start"><i class="fa-solid fa-star text-mustard mt-1"></i><div><span class="text-xs font-bold uppercase text-terracotta block">Dica do Chef</span><span class="text-sm font-semibold leading-tight">${r.tip}</span></div></div>
+                         </div>
+                    </div>
+                </div>`).join('');
+            document.getElementById('recipes-container').innerHTML = recipesHtml;
+            document.getElementById('calc-form').classList.add('hidden');
+            document.getElementById('calc-result').classList.remove('hidden');
+        }
+    </script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
