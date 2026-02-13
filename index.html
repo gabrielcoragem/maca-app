@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Maca App</title>
+    <title>Maca App | Protocolo Gold</title>
     
     <!-- Google Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,7 +30,7 @@
                     colors: {
                         cream: '#FFFBF0',
                         ink: '#264653',
-                        terracotta: '#E76F51',
+                        terracotta: '#E25D3E',
                         teal: '#2A9D8F',
                         mustard: '#E9C46A',
                         forest: '#264653',
@@ -81,7 +81,7 @@
             height: 28px;
             width: 28px;
             border-radius: 50%;
-            background: #E76F51;
+            background: #E25D3E;
             border: 4px solid #FFFBF0;
             margin-top: -10px;
             cursor: pointer;
@@ -96,7 +96,7 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
         .accordion-content {
-            transition: max-height 0.15s ease-out, opacity 0.15s ease-out;
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
             max-height: 0;
             opacity: 0;
             overflow: hidden;
@@ -105,16 +105,10 @@
             max-height: 500px;
             opacity: 1;
         }
-        .rotate-chevron { transition: transform 0.15s ease; }
+        .rotate-chevron { transition: transform 0.3s ease; }
         .rotate-chevron.active { transform: rotate(180deg); }
     </style>
 <link rel="stylesheet" href="/index.css">
-<link rel="icon" type="image/png" href="icon.png">
-    <link rel="apple-touch-icon" href="icon.png">
-    
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#E76F51">
 </head>
 <body class="h-screen w-full relative">
 
@@ -134,33 +128,35 @@
             <p class="text-ink/50 font-medium text-sm uppercase tracking-widest animate-pulse">Carregando...</p>
         </section>
 
-        <!-- ================= VIEW: LOGIN ================= -->
-        <section id="view-login" class="h-full flex flex-col justify-center items-center px-8 animate-fade-in relative z-20 hidden">
-            <div class="w-24 h-24 bg-terracotta rounded-full flex items-center justify-center mb-6 text-cream text-4xl shadow-none">
-                <i class="fa-solid fa-flask"></i>
-            </div>
-
-            <h1 class="text-4xl font-bold text-ink mb-2 tracking-tight text-center">MacaApp</h1>
-            <p class="text-ink/60 font-medium mb-10 text-sm uppercase tracking-widest text-center">Área Exclusiva de Membros</p>
-
-            <form onsubmit="handleLogin(event)" class="w-full max-w-xs space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-ink/40 uppercase mb-2 ml-2">E-mail de Compra</label>
-                    <input id="email-input" type="email" required class="w-full bg-white border-2 border-ink/10 rounded-2xl px-6 py-4 text-ink placeholder-ink/30 focus:border-terracotta focus:outline-none transition-colors font-medium" placeholder="seu@email.com">
-                </div>
+        <!-- ================= VIEW: LOGIN (DIRECT CHECK) ================= -->
+        <section id="view-login" class="h-full flex flex-col justify-center items-center px-6 animate-fade-in relative z-20 hidden">
+            
+            <div class="w-full max-w-sm bg-white/80 backdrop-blur-md border border-white/40 shadow-xl rounded-3xl p-8 relative">
                 
-                <button type="submit" class="w-full py-5 rounded-full bg-ink text-cream font-bold text-sm uppercase tracking-wider hover:bg-terracotta transition-colors shadow-none mt-4">
-                    <span id="btn-login-text">ACESSAR MEU PROTOCOLO</span>
-                    <div id="btn-login-loading" class="hidden flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-circle-notch fa-spin"></i> ENVIANDO LINK...
+                <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 w-24 h-24 bg-terracotta rounded-full flex items-center justify-center text-cream text-4xl shadow-lg border-4 border-cream">
+                    <i class="fa-solid fa-flask"></i>
+                </div>
+
+                <div class="mt-10 text-center mb-8">
+                    <h1 class="text-3xl font-bold text-ink mb-1 tracking-tight">MacaApp</h1>
+                    <p class="text-ink/60 font-medium text-xs uppercase tracking-widest">Acesso Exclusivo</p>
+                </div>
+
+                <form onsubmit="handleDirectAccess(event)" class="space-y-5">
+                    <div>
+                        <label class="block text-xs font-bold text-ink/50 uppercase mb-2 ml-1">E-mail de Compra</label>
+                        <input id="email-input" type="email" required class="w-full bg-white border-2 border-ink/10 rounded-xl px-5 py-4 text-ink placeholder-ink/30 focus:border-terracotta focus:outline-none transition-colors font-medium text-lg" placeholder="seu@email.com">
                     </div>
-                </button>
-                
-                <div id="login-feedback" class="hidden bg-green-100 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-xs text-center font-bold mt-4 animate-fade-in">
-                    <i class="fa-solid fa-check-circle mb-1 text-lg"></i><br>
-                    Verifique seu e-mail!<br>Enviamos um link mágico de acesso.
-                </div>
-            </form>
+                    
+                    <button type="submit" id="btn-access" class="w-full py-4 rounded-xl bg-terracotta text-cream font-bold text-sm uppercase tracking-wider hover:bg-ink transition-all shadow-lg active:scale-95">
+                        ACESSAR AGORA
+                    </button>
+                </form>
+
+                <!-- Feedback Area -->
+                <div id="login-feedback" class="hidden mt-4 p-3 rounded-xl text-xs font-bold text-center animate-fade-in"></div>
+
+            </div>
         </section>
 
         <!-- ================= VIEW: DASHBOARD ================= -->
@@ -251,124 +247,129 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        // --- 1. SUPABASE CONFIGURATION (REAL CREDENTIALS) ---
+        // --- 1. SUPABASE CONFIGURATION ---
         const SUPABASE_URL = 'https://cjhytxkauboiotcmogne.supabase.co'; 
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNqaHl0eGthdWJvaW90Y21vZ25lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA1MjI0OTgsImV4cCI6MjA4NjA5ODQ5OH0.hzCYIiEFOkCzDRsMa186vbZMrOE4_EMj1S1x3GQAteo';
         
-        // --- 2. CLIENT INITIALIZATION (SAFE) ---
         let sbClient = null;
         if (typeof window.supabase !== 'undefined') {
             sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         } else {
-            console.error("Supabase SDK not loaded properly from CDN");
-            document.getElementById('view-loading').innerHTML = '<div class="text-center p-6"><p class="text-terracotta font-bold mb-2">Erro de Conexão</p><p class="text-sm text-ink/60">Verifique sua internet e recarregue.</p></div>';
+            console.error("Supabase SDK Error");
         }
 
-        // --- 3. AUTH LOGIC ---
-        async function handleLogin(e) {
+        // --- 2. LOGIC: DIRECT ACCESS CHECK ---
+        const LS_KEY = 'maca_app_user';
+
+        async function handleDirectAccess(e) {
             e.preventDefault();
-            if (!sbClient) return alert("Erro crítico: Sistema não inicializado.");
-
-            const email = document.getElementById('email-input').value;
-            if(!email) return alert("Digite seu e-mail.");
-            
-            // UI States
-            const btnText = document.getElementById('btn-login-text');
-            const btnLoading = document.getElementById('btn-login-loading');
+            const btn = document.getElementById('btn-access');
             const feedback = document.getElementById('login-feedback');
+            const email = document.getElementById('email-input').value.trim();
 
-            btnText.classList.add('hidden');
-            btnLoading.classList.remove('hidden');
+            if(!email) return alert("Digite o e-mail.");
+
+            // UI Loading
+            const originalText = btn.innerText;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> VERIFICANDO...';
+            btn.classList.add('opacity-70', 'cursor-not-allowed');
             feedback.classList.add('hidden');
 
             try {
-                const { error } = await sbClient.auth.signInWithOtp({ 
+                // TRICK: Try to Sign Up. 
+                // If user exists, Supabase returns error "User already registered".
+                // We use this as confirmation that they are a client.
+                const { data, error } = await sbClient.auth.signUp({
                     email: email,
-                    options: {
-                        emailRedirectTo: window.location.href // Redirect back to this app
-                    }
+                    password: "dummy_check_" + Math.random() // Random pass, we won't log in
                 });
 
-                if (error) throw error;
-                
-                // Show Success Feedback
+                let granted = false;
+
+                if (error) {
+                    // Check if error message confirms user existence
+                    // Supabase message usually contains "User already registered" or similar
+                    const msg = error.message.toLowerCase();
+                    if (msg.includes("already registered") || msg.includes("already exists")) {
+                        granted = true;
+                    } else {
+                        throw error; // Other error (network, rate limit)
+                    }
+                } else {
+                    // If SUCCESS, it means the user DID NOT EXIST (Supabase created a new one).
+                    // So they are NOT a client. We deny access.
+                    // Ideally we should delete this fake user, but for now just deny.
+                    granted = false;
+                }
+
+                if (granted) {
+                    // SUCCESS
+                    localStorage.setItem(LS_KEY, email);
+                    checkSession(); // Load App
+                } else {
+                    // FAILURE
+                    feedback.innerHTML = `<span class="text-red-500"><i class="fa-solid fa-lock"></i> E-mail não encontrado na base de clientes.</span>`;
+                    feedback.classList.remove('hidden');
+                }
+
+            } catch (err) {
+                console.error(err);
+                feedback.innerHTML = `<span class="text-red-500">Erro de conexão. Tente novamente.</span>`;
                 feedback.classList.remove('hidden');
-                
-            } catch (error) {
-                alert("Erro ao entrar: " + error.message);
-                btnText.classList.remove('hidden');
-                btnLoading.classList.add('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = originalText;
+                btn.classList.remove('opacity-70', 'cursor-not-allowed');
             }
         }
 
-        async function handleLogout() {
-            if (sbClient) await sbClient.auth.signOut();
-            toggleUserMenu();
+        function handleLogout() {
+            localStorage.removeItem(LS_KEY);
+            checkSession();
         }
 
         function toggleUserMenu() {
             document.getElementById('user-menu').classList.toggle('hidden');
         }
 
-        // --- 4. SESSION MANAGEMENT ---
-        window.onload = async () => {
-            if (!sbClient) return;
-
-            try {
-                // Check initial session
-                const { data } = await sbClient.auth.getSession();
-                updateSessionState(data.session);
-
-                // Listen for auth changes (magic link click)
-                sbClient.auth.onAuthStateChange((event, session) => {
-                    if (event === 'SIGNED_IN') {
-                        updateSessionState(session);
-                    } else if (event === 'SIGNED_OUT') {
-                        updateSessionState(null);
-                    }
-                });
-            } catch (error) {
-                console.error("Auth Error:", error);
-                updateSessionState(null);
-            }
+        // --- 3. SESSION MANAGEMENT (LOCALSTORAGE) ---
+        window.onload = () => {
+             // Hide global loader after checking
+             setTimeout(checkSession, 500);
         };
 
-        function updateSessionState(session) {
-            // Hide Loading Screen
-            document.getElementById('view-loading').classList.add('hidden');
+        function checkSession() {
+            const userEmail = localStorage.getItem(LS_KEY);
+            const viewLoading = document.getElementById('view-loading');
+            const viewLogin = document.getElementById('view-login');
+            const viewHome = document.getElementById('view-home');
+            const viewPlayer = document.getElementById('view-player');
 
-            if (session) {
-                // User is Logged In
-                document.getElementById('view-login').classList.add('hidden');
-                document.getElementById('view-home').classList.remove('hidden');
-                document.getElementById('view-home').classList.add('flex');
+            viewLoading.classList.add('hidden');
+
+            if (userEmail) {
+                // LOGGED IN
+                viewLogin.classList.add('hidden');
+                viewHome.classList.remove('hidden');
+                viewHome.classList.add('flex');
                 
-                document.getElementById('user-email-menu').innerText = session.user.email;
-                
-                // Try to get name or use default
-                let displayName = "Alfa";
-                if(session.user.user_metadata?.full_name) {
-                    displayName = session.user.user_metadata.full_name.split(' ')[0];
-                } else if (session.user.email) {
-                    displayName = session.user.email.split('@')[0];
-                }
-                document.getElementById('user-display-name').innerText = displayName;
+                // Update UI Info
+                document.getElementById('user-email-menu').innerText = userEmail;
+                let name = userEmail.split('@')[0];
+                name = name.charAt(0).toUpperCase() + name.slice(1);
+                document.getElementById('user-display-name').innerText = name;
 
             } else {
-                // User is Logged Out
-                document.getElementById('view-home').classList.add('hidden');
-                document.getElementById('view-home').classList.remove('flex');
-                document.getElementById('view-player').classList.add('hidden');
-                document.getElementById('view-login').classList.remove('hidden');
-                
-                // Reset Login UI
-                document.getElementById('btn-login-text').classList.remove('hidden');
-                document.getElementById('btn-login-loading').classList.add('hidden');
-                document.getElementById('login-feedback').classList.add('hidden');
+                // LOGGED OUT
+                viewHome.classList.add('hidden');
+                viewHome.classList.remove('flex');
+                viewPlayer.classList.add('hidden');
+                viewLogin.classList.remove('hidden');
             }
         }
 
-        // --- 5. CONTENT DATA ---
+        // --- 4. CONTENT DATA (No Changes) ---
         const recipeList = [
             { title: "O Clássico (Shot)", icon: "fa-glass-water", color: "bg-terracotta", ingredients: ["Sua dose de Maca", "50ml de água natural"], prep: "Dilua o pó em pouca água. Tome de um gole só.", tip: "Rápido e eficiente." },
             { title: "Shake Anabólico", icon: "fa-blender", color: "bg-teal", ingredients: ["Dose de Maca", "1 banana congelada", "200ml leite vegetal", "1 scoop Whey"], prep: "Bata tudo no liquidificador.", tip: "Use canela para acelerar metabolismo." },
