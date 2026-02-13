@@ -154,7 +154,7 @@
                 </form>
 
                 <!-- Feedback Area -->
-                <div id="login-feedback" class="hidden mt-4 p-3 rounded-xl text-xs font-bold text-center animate-fade-in"></div>
+                <div id="login-feedback" class="hidden mt-4 p-3 rounded-xl text-xs font-bold text-center animate-fade-in break-words"></div>
 
             </div>
         </section>
@@ -258,9 +258,9 @@
             console.error("Supabase SDK Error");
         }
 
-        // --- 2. LOGIC: DIRECT ACCESS CHECK ---
         const LS_KEY = 'maca_app_user';
 
+        // --- 2. AUTH LOGIC ---
         async function handleDirectAccess(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-access');
@@ -277,45 +277,34 @@
             feedback.classList.add('hidden');
 
             try {
-                // TRICK: Try to Sign Up. 
-                // If user exists, Supabase returns error "User already registered".
-                // We use this as confirmation that they are a client.
-                const { data, error } = await sbClient.auth.signUp({
+                // LÓGICA DE VALIDAÇÃO BINÁRIA:
+                // Tenta enviar o OTP com a flag shouldCreateUser: false.
+                // - Se o usuário NÃO existir: Supabase retorna erro (bloqueia o acesso).
+                // - Se o usuário EXISTIR: Supabase envia o email e retorna sucesso (libera o acesso).
+                
+                const { error } = await sbClient.auth.signInWithOtp({
                     email: email,
-                    password: "dummy_check_" + Math.random() // Random pass, we won't log in
+                    options: { 
+                        shouldCreateUser: false 
+                    }
                 });
 
-                let granted = false;
-
                 if (error) {
-                    // Check if error message confirms user existence
-                    // Supabase message usually contains "User already registered" or similar
-                    const msg = error.message.toLowerCase();
-                    if (msg.includes("already registered") || msg.includes("already exists")) {
-                        granted = true;
-                    } else {
-                        throw error; // Other error (network, rate limit)
-                    }
-                } else {
-                    // If SUCCESS, it means the user DID NOT EXIST (Supabase created a new one).
-                    // So they are NOT a client. We deny access.
-                    // Ideally we should delete this fake user, but for now just deny.
-                    granted = false;
-                }
-
-                if (granted) {
-                    // SUCCESS
-                    localStorage.setItem(LS_KEY, email);
-                    checkSession(); // Load App
-                } else {
-                    // FAILURE
-                    feedback.innerHTML = `<span class="text-red-500"><i class="fa-solid fa-lock"></i> E-mail não encontrado na base de clientes.</span>`;
+                    // Erro retornado -> Usuário não existe (ou outro erro de API)
+                    console.log("Auth fail:", error.message);
+                    feedback.innerHTML = `<span class="text-red-500 font-bold"><i class="fa-solid fa-lock"></i> Acesso não encontrado.</span>`;
                     feedback.classList.remove('hidden');
+                } else {
+                    // Sucesso -> Usuário existe na base.
+                    // Conforme solicitado: "Se der sucesso... o acesso deve ser liberado".
+                    // Salvamos a sessão localmente para liberar o dashboard.
+                    localStorage.setItem(LS_KEY, email);
+                    checkSession();
                 }
 
             } catch (err) {
-                console.error(err);
-                feedback.innerHTML = `<span class="text-red-500">Erro de conexão. Tente novamente.</span>`;
+                console.error("System Error:", err);
+                feedback.innerHTML = `<span class="text-red-500">Erro técnico. Tente novamente.</span>`;
                 feedback.classList.remove('hidden');
             } finally {
                 btn.disabled = false;
