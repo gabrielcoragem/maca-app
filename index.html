@@ -5,16 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Maca App | Protocolo Gold</title>
     
+    <!-- Google Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
+    <!-- TailwindCSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
@@ -107,12 +112,15 @@
 </head>
 <body class="h-screen w-full relative">
 
+    <!-- Background Shapes -->
     <div class="shape-blob bg-mustard/20 w-96 h-96 -top-20 -right-20 rounded-bl-full"></div>
     <div class="shape-blob bg-teal/20 w-80 h-80 top-40 -left-20 rounded-r-full"></div>
     <div class="shape-blob bg-terracotta/10 w-full h-64 bottom-0 left-0 rounded-t-[100px]"></div>
 
+    <!-- App Container -->
     <div id="app" class="h-full w-full relative z-10 overflow-hidden flex flex-col">
         
+        <!-- ================= VIEW: LOADING ================= -->
         <section id="view-loading" class="h-full flex flex-col justify-center items-center absolute inset-0 z-50 bg-cream">
              <div class="w-20 h-20 bg-terracotta rounded-full flex items-center justify-center mb-6 text-cream text-3xl shadow-lg animate-pulse-slow">
                 <i class="fa-solid fa-flask"></i>
@@ -120,6 +128,7 @@
             <p class="text-ink/50 font-medium text-sm uppercase tracking-widest animate-pulse">Carregando...</p>
         </section>
 
+        <!-- ================= VIEW: LOGIN (DIRECT CHECK) ================= -->
         <section id="view-login" class="h-full flex flex-col justify-center items-center px-6 animate-fade-in relative z-20 hidden">
             
             <div class="w-full max-w-sm bg-white/80 backdrop-blur-md border border-white/40 shadow-xl rounded-3xl p-8 relative">
@@ -144,12 +153,15 @@
                     </button>
                 </form>
 
+                <!-- Feedback Area -->
                 <div id="login-feedback" class="hidden mt-4 p-3 rounded-xl text-xs font-bold text-center animate-fade-in break-words"></div>
 
             </div>
         </section>
 
+        <!-- ================= VIEW: DASHBOARD ================= -->
         <section id="view-home" class="hidden h-full flex-col px-6 pt-10 pb-6 animate-fade-in relative z-20">
+            <!-- Header -->
             <div class="flex justify-between items-start mb-8 relative">
                 <div>
                     <h2 class="text-[10px] font-bold text-ink/40 uppercase tracking-[0.2em] mb-1">MEMBRO VIP CONFIRMADO</h2>
@@ -159,6 +171,7 @@
                     <button onclick="toggleUserMenu()" class="w-12 h-12 bg-white rounded-full border-2 border-ink/10 flex items-center justify-center text-ink text-lg active:scale-95 transition-transform z-30 relative shadow-sm">
                         <i class="fa-solid fa-user"></i>
                     </button>
+                    <!-- Dropdown -->
                     <div id="user-menu" class="hidden absolute right-0 top-14 w-64 bg-white rounded-2xl shadow-xl border-2 border-ink/5 overflow-hidden z-50 animate-fade-in origin-top-right">
                         <div class="px-6 py-4 border-b border-ink/5 bg-gray-50">
                              <p class="text-[10px] uppercase text-ink/40 font-bold mb-1">Logado como</p>
@@ -171,8 +184,10 @@
                 </div>
             </div>
 
+            <!-- Cards Grid (Horizontal) -->
             <div class="flex-1 overflow-y-auto no-scrollbar grid grid-cols-1 gap-5 pb-20">
                 
+                <!-- Card 1 -->
                 <div onclick="openModule('maca')" class="bg-terracotta rounded-organic-card p-6 flex items-center gap-5 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform shadow-lg shadow-terracotta/30 min-h-[120px]">
                     <div class="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center shrink-0 text-cream text-2xl"><i class="fa-solid fa-flask"></i></div>
                     <div class="flex-1 min-w-0 text-left">
@@ -181,6 +196,7 @@
                     </div>
                 </div>
 
+                <!-- Card 2 -->
                 <div onclick="openModule('size')" class="bg-teal rounded-tr-[60px] rounded-bl-[40px] rounded-tl-[30px] rounded-br-[30px] p-6 flex items-center gap-5 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform shadow-lg shadow-teal/30 min-h-[120px]">
                     <div class="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center shrink-0 text-cream text-2xl"><i class="fa-solid fa-ruler-vertical"></i></div>
                     <div class="flex-1 min-w-0 text-left">
@@ -189,6 +205,7 @@
                     </div>
                 </div>
 
+                <!-- Card 3 -->
                 <div onclick="openModule('testo')" class="bg-mustard rounded-tl-[60px] rounded-br-[40px] rounded-tr-[30px] rounded-bl-[30px] p-6 flex items-center gap-5 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform shadow-lg shadow-mustard/30 min-h-[120px]">
                     <div class="w-14 h-14 rounded-full bg-black/10 flex items-center justify-center shrink-0 text-ink text-2xl"><i class="fa-solid fa-bolt"></i></div>
                     <div class="flex-1 min-w-0 text-left">
@@ -197,6 +214,7 @@
                     </div>
                 </div>
 
+                <!-- Card 4 -->
                 <div onclick="openModule('control')" class="bg-forest rounded-[40px] p-6 flex items-center gap-5 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform shadow-lg shadow-forest/30 min-h-[120px]">
                     <div class="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center shrink-0 text-cream text-2xl"><i class="fa-solid fa-stopwatch"></i></div>
                     <div class="flex-1 min-w-0 text-left">
@@ -207,6 +225,7 @@
             </div>
         </section>
 
+        <!-- ================= VIEW: READER ================= -->
         <section id="view-player" class="hidden h-full flex flex-col absolute inset-0 z-50 animate-pop-in bg-cream">
             <div class="shrink-0 px-6 pt-8 pb-4 flex justify-between items-center z-20 bg-cream/90 backdrop-blur-sm border-b border-ink/5">
                 <button onclick="closeModule()" class="w-10 h-10 rounded-full bg-white border-2 border-ink/10 flex items-center justify-center text-ink hover:bg-ink/5 transition"><i class="fa-solid fa-arrow-left"></i></button>
@@ -226,6 +245,7 @@
 
     </div>
 
+    <!-- JAVASCRIPT -->
     <script>
         // --- 1. SUPABASE CONFIGURATION ---
         const SUPABASE_URL = 'https://cjhytxkauboiotcmogne.supabase.co'; 
@@ -240,7 +260,7 @@
 
         const LS_KEY = 'maca_app_user';
 
-        // --- 2. AUTH LOGIC (SENHA FANTASMA) ---
+        // --- 2. AUTH LOGIC ---
         async function handleDirectAccess(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-access');
@@ -252,22 +272,32 @@
             // UI Loading
             const originalText = btn.innerText;
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> ACESSANDO...';
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> VERIFICANDO...';
             btn.classList.add('opacity-70', 'cursor-not-allowed');
             feedback.classList.add('hidden');
 
             try {
-                // LÓGICA DA SENHA FANTASMA:
-                const { data, error } = await sbClient.auth.signInWithPassword({
+                // LÓGICA DE VALIDAÇÃO BINÁRIA:
+                // Tenta enviar o OTP com a flag shouldCreateUser: false.
+                // - Se o usuário NÃO existir: Supabase retorna erro (bloqueia o acesso).
+                // - Se o usuário EXISTIR: Supabase envia o email e retorna sucesso (libera o acesso).
+                
+                const { error } = await sbClient.auth.signInWithOtp({
                     email: email,
-                    password: 'MacaGold2026' // <-- SENHA PADRÃO UNIVERSAL
+                    options: { 
+                        shouldCreateUser: false 
+                    }
                 });
 
                 if (error) {
+                    // Erro retornado -> Usuário não existe (ou outro erro de API)
                     console.log("Auth fail:", error.message);
-                    feedback.innerHTML = `<span class="text-red-500 font-bold"><i class="fa-solid fa-lock"></i> Acesso não encontrado. Verifique se usou o e-mail da compra.</span>`;
+                    feedback.innerHTML = `<span class="text-red-500 font-bold"><i class="fa-solid fa-lock"></i> Acesso não encontrado.</span>`;
                     feedback.classList.remove('hidden');
                 } else {
+                    // Sucesso -> Usuário existe na base.
+                    // Conforme solicitado: "Se der sucesso... o acesso deve ser liberado".
+                    // Salvamos a sessão localmente para liberar o dashboard.
                     localStorage.setItem(LS_KEY, email);
                     checkSession();
                 }
@@ -294,6 +324,7 @@
 
         // --- 3. SESSION MANAGEMENT (LOCALSTORAGE) ---
         window.onload = () => {
+             // Hide global loader after checking
              setTimeout(checkSession, 500);
         };
 
