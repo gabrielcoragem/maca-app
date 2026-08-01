@@ -408,12 +408,64 @@
             const email = localStorage.getItem(LS_KEY);
             if (!email || !sbClient) return;
             try {
+                const antes = new Set(ACCESS.unlocked || []);
                 const { data, error } = await sbClient.rpc('app_login', { p_email: email });
                 if (error || !data || data.found !== true) return;
                 ACCESS = { email: data.email, unlocked: data.unlocked || [] };
                 localStorage.setItem(LS_KEY + '_unlocked', JSON.stringify(ACCESS.unlocked));
                 applyLocks();
+
+                // avisa quando algo acabou de destravar, senao a pessoa nao percebe
+                const novos = (ACCESS.unlocked || []).filter(c => !antes.has(c));
+                if (antes.size && novos.length) {
+                    const prod = CATALOG.find(p => p.code === novos[0]);
+                    avisar(`${prod ? prod.name : 'Novo conteúdo'} liberado!`);
+                }
             } catch (e) { console.error(e); }
+        }
+
+        // --- LIBERACAO EM TEMPO REAL ---
+        // O banco avisa por broadcast quando o acesso muda. O canal e um hash do
+        // e-mail e a mensagem nao carrega dado nenhum: e so o sinal para buscar a
+        // lista atualizada. Assim a secao destrava sozinha com o app aberto.
+        let canalAcesso = null;
+
+        async function ligarTempoReal() {
+            if (!sbClient || !ACCESS.email) return;
+            await desligarTempoReal();
+            try {
+                const { data: canal, error } = await sbClient.rpc('canal_do_usuario', { p_email: ACCESS.email });
+                if (error || !canal) return;
+                canalAcesso = sbClient.channel(canal)
+                    .on('broadcast', { event: 'acesso_mudou' }, () => refreshAccess())
+                    .subscribe();
+            } catch (e) { console.error(e); }
+        }
+
+        async function desligarTempoReal() {
+            if (!canalAcesso) return;
+            try { await sbClient.removeChannel(canalAcesso); } catch (e) { /* ignora */ }
+            canalAcesso = null;
+        }
+
+        // Rede de seguranca: se o websocket cair, ainda destrava sozinho.
+        // So roda com a aba visivel, para nao gastar bateria a toa.
+        setInterval(() => {
+            if (document.visibilityState === 'visible' && localStorage.getItem(LS_KEY)) refreshAccess();
+        }, 45000);
+
+        function avisar(msg) {
+            let t = document.getElementById('toast-aviso');
+            if (!t) {
+                t = document.createElement('div');
+                t.id = 'toast-aviso';
+                t.className = 'fixed left-1/2 -translate-x-1/2 bottom-8 z-[80] bg-ink text-cream px-6 py-4 rounded-2xl shadow-2xl font-bold text-sm flex items-center gap-3 transition-opacity duration-300';
+                document.body.appendChild(t);
+            }
+            t.innerHTML = `<i class="fa-solid fa-lock-open text-terracotta"></i> ${msg}`;
+            t.style.opacity = '1';
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => { t.style.opacity = '0'; }, 4500);
         }
 
         async function loadCatalog() {
@@ -480,6 +532,7 @@
         window.addEventListener('pageshow', refreshAccess);
 
         function handleLogout() {
+            desligarTempoReal();
             localStorage.removeItem(LS_KEY);
             localStorage.removeItem(LS_KEY + '_unlocked');
             ACCESS = { email: null, unlocked: [] };
@@ -520,6 +573,7 @@
                 applyLocks();
                 loadCatalog();
                 refreshAccess();
+                ligarTempoReal();
 
                 let name = userEmail.split('@')[0];
                 name = name.charAt(0).toUpperCase() + name.slice(1);
