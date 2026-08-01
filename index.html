@@ -4,7 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Maca App | Protocolo Gold</title>
-    
+
+    <!-- Instalacao na tela de inicio (PWA) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2C4A52">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MacaApp">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="icon" href="icon-192.png" type="image/png">
+
     <!-- Google Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -144,6 +154,7 @@
         .cx-warn p{margin:0;font-size:15px;color:#8a3a22}
         .cx-sol{background:rgba(44,74,82,.05);border-radius:14px;padding:12px 15px;font-size:15px !important;margin-bottom:14px !important}
         .cx-tag{display:inline-block;background:rgba(206,106,75,.13);color:#CE6A4B;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:4px;white-space:nowrap}
+        .cx-extra{padding-top:34px;margin-top:30px;border-top:2px solid rgba(44,74,82,.08)}
         .cx-end{text-align:center;padding:34px 0 10px;margin-top:30px;border-top:2px solid rgba(44,74,82,.08);color:rgba(44,74,82,.4);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
         .cx-end i{color:#319136;margin-right:6px}
         @media (max-width:420px){.cx-cover-title{font-size:25px}.cx-cap-title{font-size:19px}.cx-body p{font-size:15.5px}}
@@ -217,6 +228,9 @@
                              <p class="text-[10px] uppercase text-ink/40 font-bold mb-1">Logado como</p>
                              <p id="user-email-menu" class="text-xs font-bold text-ink truncate">usuario@email.com</p>
                         </div>
+                        <button id="btn-instalar" onclick="abrirInstalar()" class="w-full text-left px-6 py-4 text-ink font-bold hover:bg-cream transition-colors flex items-center gap-3 text-sm border-b border-ink/5">
+                            <i class="fa-solid fa-mobile-screen-button text-terracotta"></i> Instalar na tela inicial
+                        </button>
                         <button onclick="handleLogout()" class="w-full text-left px-6 py-4 text-red-500 font-bold hover:bg-red-50 transition-colors flex items-center gap-3 text-sm">
                             <i class="fa-solid fa-power-off"></i> Sair do App
                         </button>
@@ -287,6 +301,21 @@
                     Desbloquear agora
                 </button>
                 <p class="text-[10px] text-center text-ink/40 mt-3">Acesso liberado automaticamente apos a compra.</p>
+            </div>
+        </section>
+
+        <!-- ================= MODAL: INSTALAR NA TELA DE INICIO ================= -->
+        <section id="modal-instalar" class="hidden fixed inset-0 z-[60] flex items-center justify-center px-6 bg-black/70 backdrop-blur-sm animate-fade-in">
+            <div class="bg-cream w-full max-w-sm rounded-[32px] p-7 relative shadow-2xl">
+                <button onclick="fecharInstalar()" class="absolute top-4 right-5 text-ink/40 text-xl"><i class="fa-solid fa-xmark"></i></button>
+                <div class="w-14 h-14 rounded-full bg-terracotta/15 flex items-center justify-center text-terracotta text-2xl mb-4"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                <h3 id="instalar-titulo" class="text-2xl font-bold text-ink leading-tight mb-2">Instalar na tela inicial</h3>
+                <p class="text-sm text-ink/70 leading-relaxed mb-5">Assim o app vira um ícone no seu celular e você abre direto, sem precisar do e-mail.</p>
+                <ol id="instalar-passos" class="text-sm text-ink/80 leading-relaxed list-decimal list-outside pl-5 space-y-2 font-medium"></ol>
+                <div id="instalar-aviso"></div>
+                <button onclick="fecharInstalar()" class="w-full bg-ink text-cream font-bold py-4 rounded-2xl text-sm tracking-widest uppercase active:scale-95 transition-transform mt-6">
+                    Entendi
+                </button>
             </div>
         </section>
 
@@ -578,6 +607,12 @@
                 title: "Protocolo Vital",
                 themeColor: "text-terracotta",
                 borderClass: "border-terracotta",
+                layout: "ebook",
+                cover: {
+                    kicker: "Protocolo",
+                    title: "O Protocolo Vital",
+                    sub: "Como calibrar a Maca Peruana para reativar o seu endotélio e sustentar a ereção."
+                },
                 pages: [
                     { title: "Bem-vindo à Elite", icon: "fa-seedling", text: "Você adquiriu um ativador biológico. A Maca Peruana, quando pura, é informação para suas células. Esqueça 'farinhas' de mercado. Vamos calibrar sua máquina." },
                     { title: "O Endotélio", icon: "fa-dna", text: "A ereção é hidráulica. Para o sangue entrar, a porta precisa abrir. Essa porta é o 'Endotélio'. A Maca carrega Macamidas que obrigam o endotélio a produzir Óxido Nítrico." },
@@ -602,6 +637,12 @@
                 title: "Aumento Natural",
                 themeColor: "text-teal",
                 borderClass: "border-teal",
+                layout: "ebook",
+                cover: {
+                    kicker: "Bônus",
+                    title: "Aumento Natural",
+                    sub: "O método de expansão do tecido cavernoso, passo a passo e sem lesão."
+                },
                 pages: [
                     { title: "Anatomia", icon: "fa-ruler", text: "O pênis não é músculo, é uma esponja. O tamanho é determinado pela capacidade dessa esponja de reter sangue." },
                     { title: "Micro-Lesão", icon: "fa-microscope", text: "O Jelqing cria micro-fissuras saudáveis no tecido cavernoso. Ao cicatrizar, ele expande. Similar à musculação." },
@@ -626,6 +667,12 @@
                 title: "Hormônios & Energia",
                 themeColor: "text-mustard",
                 borderClass: "border-mustard",
+                layout: "ebook",
+                cover: {
+                    kicker: "Bônus",
+                    title: "Hormônios & Energia",
+                    sub: "Como recuperar a sua testosterona pela comida, pelo sol e pelo sono."
+                },
                 pages: [
                     { title: "A Crise", icon: "fa-arrow-trend-down", text: "Homens hoje têm 50% menos testosterona que seus avós. Plásticos e sedentarismo são os culpados." },
                     { title: "Mito do Colesterol", icon: "fa-burger", text: "A molécula de Testosterona é feita de COLESTEROL. Sem gordura boa, não há hormônios." },
@@ -650,6 +697,12 @@
                 title: "Controle Total",
                 themeColor: "text-forest",
                 borderClass: "border-forest",
+                layout: "ebook",
+                cover: {
+                    kicker: "Bônus",
+                    title: "Controle Total",
+                    sub: "O treino de resistência para dominar o reflexo e durar o quanto quiser."
+                },
                 pages: [
                     { title: "O Botão", icon: "fa-circle-exclamation", text: "Ejaculação é Sistema Simpático (Luta/Fuga). Para durar, ative o Parassimpático (Relaxamento)." },
                     { title: "Ansiedade", icon: "fa-brain", text: "O medo de falhar gera adrenalina, que acelera o processo. Foque na sensação, não no tempo." },
@@ -696,9 +749,9 @@
 
             // --- modo ebook: rolagem vertical continua, sem paginacao ---
             if (data.layout === 'ebook') {
-                container.scrollTop = 0;
+                container.scrollTo({ top: 0, behavior: 'instant' });
                 document.getElementById('player-title').innerText = data.title;
-                document.getElementById('player-counter').innerText = `${data.chapters.length} CAPS`;
+                document.getElementById('player-counter').innerText = `${moduleChapters(data).length} CAPS`;
                 if (navBar) navBar.classList.add('hidden');
                 container.classList.remove('pb-32');
                 container.classList.add('pb-12');
@@ -734,8 +787,29 @@
             else renderStandardPage(container, pageData);
         }
 
+        // Normaliza qualquer modulo para uma lista de capitulos.
+        // Modulos novos ja vem com chapters[]; os antigos usam pages[] e sao convertidos aqui,
+        // preservando texto, icone e ordem originais.
+        function moduleChapters(data) {
+            if (data.chapters) return data.chapters;
+            let n = 0;
+            return (data.pages || []).filter(p => !p.type).map(p => {
+                n++;
+                return {
+                    n: String(n).padStart(2, '0'),
+                    title: p.title,
+                    icon: p.icon,
+                    html: `<p>${p.text}</p>`
+                };
+            });
+        }
+
         function renderEbook(container, data) {
-            const caps = data.chapters.map((c, i) => `
+            const chapters = moduleChapters(data);
+            const extras = (data.pages || []).filter(p => p.type);
+            const cover = data.cover || { kicker: 'Módulo', title: data.title, sub: '' };
+
+            const caps = chapters.map((c, i) => `
                 <article class="cx-cap ${i === 0 ? 'cx-first' : ''}">
                     <div class="cx-cap-head">
                         <div class="cx-cap-icon"><i class="fa-solid ${c.icon}"></i></div>
@@ -750,29 +824,59 @@
             container.innerHTML = `
                 <div class="animate-fade-in w-full max-w-2xl mx-auto text-left">
                     <div class="cx-cover">
-                        <p class="cx-cover-kicker">Protocolo</p>
-                        <h2 class="cx-cover-title">O Protocolo de Ignição Asiática</h2>
-                        <p class="cx-cover-sub">O guia definitivo para reativar o seu fluxo sanguíneo e assumir o controle da sua biologia.</p>
+                        <p class="cx-cover-kicker">${cover.kicker}</p>
+                        <h2 class="cx-cover-title">${cover.title}</h2>
+                        ${cover.sub ? `<p class="cx-cover-sub">${cover.sub}</p>` : ''}
                     </div>
                     <nav class="cx-toc">
                         <p class="cx-toc-h">Neste guia</p>
-                        ${data.chapters.map(c => `<a href="#cap-${c.n}" onclick="scrollToCap(event,'${c.n}')"><span>${c.n}</span>${c.title}</a>`).join('')}
+                        ${chapters.map(c => `<a href="#cap-${c.n}" onclick="scrollToCap(event,'${c.n}')"><span>${c.n}</span>${c.title}</a>`).join('')}
                     </nav>
                     ${caps}
+                    <div id="cx-extras"></div>
                     <div class="cx-end"><i class="fa-solid fa-check"></i> Fim do guia</div>
                 </div>`;
 
             // ancoras
-            container.querySelectorAll('.cx-cap').forEach((el, i) => el.id = 'cap-' + data.chapters[i].n);
+            container.querySelectorAll('.cx-cap').forEach((el, i) => el.id = 'cap-' + chapters[i].n);
+
+            // blocos especiais dos modulos antigos (calculadora, resumo mestre) entram
+            // no fim do documento, na mesma ordem em que apareciam na paginacao
+            const box = container.querySelector('#cx-extras');
+            extras.forEach(p => {
+                const slot = document.createElement('div');
+                slot.className = 'cx-extra';
+                box.appendChild(slot);
+                if (p.type === 'calculator') renderCalculator(slot);
+                else if (p.type === 'master-summary') renderMasterSummary(slot, p, data.themeColor, data.borderClass);
+            });
         }
 
+        // Animacao propria: o scroll suave nativo do container e cancelado de forma
+        // imprevisivel no Chrome, entao controlamos a rolagem quadro a quadro.
+        let capScrollAnim = null;
         function scrollToCap(e, n) {
-            e.preventDefault();
+            if (e) e.preventDefault();
             const el = document.getElementById('cap-' + n);
             const box = document.getElementById('player-content');
             if (!el || !box) return;
-            const delta = el.getBoundingClientRect().top - box.getBoundingClientRect().top;
-            box.scrollTo({ top: box.scrollTop + delta - 12, behavior: 'smooth' });
+
+            const inicio = box.scrollTop;
+            const delta = el.getBoundingClientRect().top - box.getBoundingClientRect().top - 12;
+            const limite = box.scrollHeight - box.clientHeight;
+            const destino = Math.max(0, Math.min(limite, inicio + delta));
+            const dur = Math.min(700, Math.max(220, Math.abs(destino - inicio) * 0.5));
+
+            if (capScrollAnim) cancelAnimationFrame(capScrollAnim);
+            const t0 = performance.now();
+            const passo = (agora) => {
+                const p = Math.min(1, (agora - t0) / dur);
+                const eased = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+                box.scrollTo({ top: inicio + (destino - inicio) * eased, behavior: 'instant' });
+                if (p < 1) capScrollAnim = requestAnimationFrame(passo);
+                else capScrollAnim = null;
+            };
+            capScrollAnim = requestAnimationFrame(passo);
         }
 
         function renderStandardPage(container, data) {
@@ -888,7 +992,75 @@
             document.getElementById('calc-form').classList.add('hidden');
             document.getElementById('calc-result').classList.remove('hidden');
         }
+
+        // --- INSTALACAO NA TELA DE INICIO ---
+        let promptInstalar = null;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            promptInstalar = e;
+        });
+
+        function jaInstalado() {
+            return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        }
+
+        function abrirInstalar() {
+            document.getElementById('user-menu').classList.add('hidden');
+
+            // Android/Chrome: da pra instalar com um toque so.
+            // O prompt() rejeita a promise quando o navegador recusa — nesse caso
+            // caimos nas instrucoes manuais em vez de deixar a pessoa sem nada.
+            if (promptInstalar) {
+                const p = promptInstalar;
+                promptInstalar = null;
+                Promise.resolve()
+                    .then(() => p.prompt())
+                    .then(() => p.userChoice)
+                    .catch(() => mostrarPassosManuais());
+                return;
+            }
+
+            mostrarPassosManuais();
+        }
+
+        function mostrarPassosManuais() {
+            const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+            const passos = ios
+                ? `<li>Toque em <b>Compartilhar</b> <i class="fa-solid fa-arrow-up-from-bracket text-terracotta"></i> na barra de baixo do Safari.</li>
+                   <li>Role e toque em <b>Adicionar à Tela de Início</b>.</li>
+                   <li>Toque em <b>Adicionar</b>, no canto superior direito.</li>`
+                : `<li>Toque nos <b>três pontinhos</b> <i class="fa-solid fa-ellipsis-vertical text-terracotta"></i> do navegador.</li>
+                   <li>Toque em <b>Adicionar à tela inicial</b> (ou <b>Instalar aplicativo</b>).</li>
+                   <li>Confirme em <b>Adicionar</b>.</li>`;
+
+            const aviso = ios
+                ? `<p class="text-xs text-ink/50 mt-4 leading-relaxed">No iPhone isso só funciona pelo <b>Safari</b>. Se você abriu por outro navegador, copie o endereço e cole no Safari.</p>`
+                : '';
+
+            document.getElementById('instalar-passos').innerHTML = passos;
+            document.getElementById('instalar-aviso').innerHTML = aviso;
+            document.getElementById('instalar-titulo').innerText = ios ? 'Instalar no iPhone' : 'Instalar no Android';
+            document.getElementById('modal-instalar').classList.remove('hidden');
+        }
+
+        function fecharInstalar() {
+            document.getElementById('modal-instalar').classList.add('hidden');
+        }
+
+        // esconde a opcao quando o app ja esta rodando instalado
+        window.addEventListener('load', () => {
+            if (jaInstalado()) {
+                const b = document.getElementById('btn-instalar');
+                if (b) b.classList.add('hidden');
+            }
+        });
+
+        // Service worker: habilita a instalacao na tela de inicio.
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(() => { /* sem SW o app segue normal */ });
+            });
+        }
     </script>
-<script type="module" src="/index.tsx"></script>
 </body>
 </html>
