@@ -383,7 +383,9 @@
                     falha('Erro de conexao. Tente de novo.');
                 } else if (!data || data.found !== true) {
                     falha('Nao encontramos esse e-mail. Use o mesmo e-mail da compra.');
-                } else if (!(data.unlocked || []).includes('app_principal')) {
+                } else if ((data.unlocked || []).length === 0) {
+                    // sem nenhum produto ativo = compra recusada, cancelada ou reembolsada.
+                    // Quem comprou so o upsell entra normalmente: os cards ja se bloqueiam sozinhos.
                     falha('Seu acesso esta inativo. Fale com o suporte.');
                 } else {
                     ACCESS = { email: data.email, unlocked: data.unlocked || [] };
