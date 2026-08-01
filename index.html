@@ -107,6 +107,11 @@
         }
         .rotate-chevron { transition: transform 0.3s ease; }
         .rotate-chevron.active { transform: rotate(180deg); }
+    
+        /* --- secao bloqueada --- */
+        .is-locked { filter: grayscale(0.75); opacity: 0.55; }
+        .is-locked:active { transform: scale(0.98); }
+        .lock-badge { pointer-events: none; }
     </style>
 <link rel="stylesheet" href="/index.css">
 </head>
@@ -188,7 +193,7 @@
             <div class="flex-1 overflow-y-auto no-scrollbar grid grid-cols-1 gap-5 pb-20">
                 
                 <!-- Card 1 -->
-                <div onclick="openModule('maca')" class="bg-terracotta rounded-organic-card p-6 flex items-center gap-5 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform shadow-lg shadow-terracotta/30 min-h-[120px]">
+                <div onclick="handleCardClick('app_principal','maca')" data-code="app_principal" class="bg-terracotta rounded-organic-card p-6 flex items-center gap-5 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform shadow-lg shadow-terracotta/30 min-h-[120px]">
                     <div class="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center shrink-0 text-cream text-2xl"><i class="fa-solid fa-flask"></i></div>
                     <div class="flex-1 min-w-0 text-left">
                         <h3 class="text-xl font-bold text-cream leading-tight">Maca App: Protocolo Gold</h3>
@@ -197,7 +202,7 @@
                 </div>
 
                 <!-- Card 2 -->
-                <div onclick="openModule('size')" class="bg-teal rounded-tr-[60px] rounded-bl-[40px] rounded-tl-[30px] rounded-br-[30px] p-6 flex items-center gap-5 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform shadow-lg shadow-teal/30 min-h-[120px]">
+                <div onclick="handleCardClick('app_principal','size')" data-code="app_principal" class="bg-teal rounded-tr-[60px] rounded-bl-[40px] rounded-tl-[30px] rounded-br-[30px] p-6 flex items-center gap-5 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform shadow-lg shadow-teal/30 min-h-[120px]">
                     <div class="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center shrink-0 text-cream text-2xl"><i class="fa-solid fa-ruler-vertical"></i></div>
                     <div class="flex-1 min-w-0 text-left">
                         <h3 class="text-xl font-bold text-cream leading-tight">Bônus: Pau de Cavalo</h3>
@@ -206,7 +211,7 @@
                 </div>
 
                 <!-- Card 3 -->
-                <div onclick="openModule('testo')" class="bg-mustard rounded-tl-[60px] rounded-br-[40px] rounded-tr-[30px] rounded-bl-[30px] p-6 flex items-center gap-5 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform shadow-lg shadow-mustard/30 min-h-[120px]">
+                <div onclick="handleCardClick('app_principal','testo')" data-code="app_principal" class="bg-mustard rounded-tl-[60px] rounded-br-[40px] rounded-tr-[30px] rounded-bl-[30px] p-6 flex items-center gap-5 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform shadow-lg shadow-mustard/30 min-h-[120px]">
                     <div class="w-14 h-14 rounded-full bg-black/10 flex items-center justify-center shrink-0 text-ink text-2xl"><i class="fa-solid fa-bolt"></i></div>
                     <div class="flex-1 min-w-0 text-left">
                         <h3 class="text-xl font-bold text-ink leading-tight">Bônus: Fonte da Juventude</h3>
@@ -215,13 +220,46 @@
                 </div>
 
                 <!-- Card 4 -->
-                <div onclick="openModule('control')" class="bg-forest rounded-[40px] p-6 flex items-center gap-5 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform shadow-lg shadow-forest/30 min-h-[120px]">
+                <div onclick="handleCardClick('app_principal','control')" data-code="app_principal" class="bg-forest rounded-[40px] p-6 flex items-center gap-5 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform shadow-lg shadow-forest/30 min-h-[120px]">
                     <div class="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center shrink-0 text-cream text-2xl"><i class="fa-solid fa-stopwatch"></i></div>
                     <div class="flex-1 min-w-0 text-left">
                         <h3 class="text-xl font-bold text-cream leading-tight">Bônus: Controle Total</h3>
                         <p class="text-[10px] font-bold text-cream/80 uppercase tracking-widest mt-2">Técnica Anti-Gozagem</p>
                     </div>
                 </div>
+
+                <!-- Card 5 :: UPSELL Shake Acelerador Asiatico -->
+                <div onclick="handleCardClick('shake_asiatico','shake')" data-code="shake_asiatico" class="upsell-card bg-ink rounded-tr-[60px] rounded-bl-[40px] rounded-tl-[30px] rounded-br-[30px] p-6 flex items-center gap-5 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform shadow-lg min-h-[120px]">
+                    <div class="w-14 h-14 rounded-full bg-white/15 flex items-center justify-center shrink-0 text-cream text-2xl"><i class="fa-solid fa-blender"></i></div>
+                    <div class="flex-1 min-w-0 text-left">
+                        <h3 class="text-xl font-bold text-cream leading-tight">Shake Acelerador Asiatico</h3>
+                        <p class="text-[10px] font-bold text-cream/80 uppercase tracking-widest mt-2">Absorcao Turbinada</p>
+                    </div>
+                </div>
+
+                <!-- Card 6 :: UPSELL Massagem Orgasmica -->
+                <div onclick="handleCardClick('massagem_orgasmica','massagem')" data-code="massagem_orgasmica" class="upsell-card bg-terracotta rounded-[40px] p-6 flex items-center gap-5 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform shadow-lg min-h-[120px]">
+                    <div class="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center shrink-0 text-cream text-2xl"><i class="fa-solid fa-hand-holding-heart"></i></div>
+                    <div class="flex-1 min-w-0 text-left">
+                        <h3 class="text-xl font-bold text-cream leading-tight">Massagem Orgasmica</h3>
+                        <p class="text-[10px] font-bold text-cream/80 uppercase tracking-widest mt-2">Guiado por Sexologo</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= MODAL: SECAO BLOQUEADA ================= -->
+        <section id="lock-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center px-6 bg-black/70 backdrop-blur-sm animate-fade-in">
+            <div class="bg-cream w-full max-w-sm rounded-[32px] p-7 relative shadow-2xl">
+                <button onclick="closeLockModal()" class="absolute top-4 right-5 text-ink/40 text-xl"><i class="fa-solid fa-xmark"></i></button>
+                <div class="w-14 h-14 rounded-full bg-terracotta/15 flex items-center justify-center text-terracotta text-2xl mb-4"><i class="fa-solid fa-lock"></i></div>
+                <h3 id="lock-title" class="text-2xl font-bold text-ink leading-tight mb-2">Conteudo bloqueado</h3>
+                <p id="lock-desc" class="text-sm text-ink/70 leading-relaxed mb-4"></p>
+                <p id="lock-price" class="text-lg font-bold text-terracotta mb-5"></p>
+                <button id="lock-cta" class="w-full bg-terracotta text-cream font-bold py-4 rounded-2xl text-sm tracking-widest uppercase active:scale-95 transition-transform">
+                    Desbloquear agora
+                </button>
+                <p class="text-[10px] text-center text-ink/40 mt-3">Acesso liberado automaticamente apos a compra.</p>
             </div>
         </section>
 
@@ -248,8 +286,8 @@
     <!-- JAVASCRIPT -->
     <script>
         // --- 1. SUPABASE CONFIGURATION ---
-        const SUPABASE_URL = 'https://cjhytxkauboiotcmogne.supabase.co'; 
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNqaHl0eGthdWJvaW90Y21vZ25lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA1MjI0OTgsImV4cCI6MjA4NjA5ODQ5OH0.hzCYIiEFOkCzDRsMa186vbZMrOE4_EMj1S1x3GQAteo';
+        const SUPABASE_URL = 'https://zerbhrvskqgsxrqrmusj.supabase.co'; 
+        const SUPABASE_KEY = 'sb_publishable_mutr1thlYZDxlxiZAK5vIg_95OrzNR3';
         
         let sbClient = null;
         if (typeof window.supabase !== 'undefined') {
@@ -260,52 +298,46 @@
 
         const LS_KEY = 'maca_app_user';
 
-        // --- 2. AUTH LOGIC ---
+        // --- 2. AUTH LOGIC (RPC app_login) ---
+        let ACCESS = { email: null, unlocked: [] };
+        let CATALOG = [];
+
         async function handleDirectAccess(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-access');
             const feedback = document.getElementById('login-feedback');
-            const email = document.getElementById('email-input').value.trim();
+            const email = document.getElementById('email-input').value.trim().toLowerCase();
+            if (!email) return alert("Digite o e-mail.");
 
-            if(!email) return alert("Digite o e-mail.");
-
-            // UI Loading
             const originalText = btn.innerText;
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> VERIFICANDO...';
             btn.classList.add('opacity-70', 'cursor-not-allowed');
             feedback.classList.add('hidden');
 
-            try {
-                // LÓGICA DE VALIDAÇÃO BINÁRIA:
-                // Tenta enviar o OTP com a flag shouldCreateUser: false.
-                // - Se o usuário NÃO existir: Supabase retorna erro (bloqueia o acesso).
-                // - Se o usuário EXISTIR: Supabase envia o email e retorna sucesso (libera o acesso).
-                
-                const { error } = await sbClient.auth.signInWithOtp({
-                    email: email,
-                    options: { 
-                        shouldCreateUser: false 
-                    }
-                });
+            const falha = (msg) => {
+                feedback.innerHTML = `<span class="text-red-500 font-bold"><i class="fa-solid fa-lock"></i> ${msg}</span>`;
+                feedback.classList.remove('hidden');
+            };
 
+            try {
+                const { data, error } = await sbClient.rpc('app_login', { p_email: email });
                 if (error) {
-                    // Erro retornado -> Usuário não existe (ou outro erro de API)
-                    console.log("Auth fail:", error.message);
-                    feedback.innerHTML = `<span class="text-red-500 font-bold"><i class="fa-solid fa-lock"></i> Acesso não encontrado.</span>`;
-                    feedback.classList.remove('hidden');
+                    console.error(error);
+                    falha('Erro de conexao. Tente de novo.');
+                } else if (!data || data.found !== true) {
+                    falha('Nao encontramos esse e-mail. Use o mesmo e-mail da compra.');
+                } else if (!(data.unlocked || []).includes('app_principal')) {
+                    falha('Seu acesso esta inativo. Fale com o suporte.');
                 } else {
-                    // Sucesso -> Usuário existe na base.
-                    // Conforme solicitado: "Se der sucesso... o acesso deve ser liberado".
-                    // Salvamos a sessão localmente para liberar o dashboard.
-                    localStorage.setItem(LS_KEY, email);
+                    ACCESS = { email: data.email, unlocked: data.unlocked || [] };
+                    localStorage.setItem(LS_KEY, ACCESS.email);
+                    localStorage.setItem(LS_KEY + '_unlocked', JSON.stringify(ACCESS.unlocked));
                     checkSession();
                 }
-
             } catch (err) {
                 console.error("System Error:", err);
-                feedback.innerHTML = `<span class="text-red-500">Erro técnico. Tente novamente.</span>`;
-                feedback.classList.remove('hidden');
+                falha('Erro tecnico. Tente novamente.');
             } finally {
                 btn.disabled = false;
                 btn.innerText = originalText;
@@ -313,8 +345,86 @@
             }
         }
 
+        // recarrega o acesso do banco (em segundo plano)
+        async function refreshAccess() {
+            const email = localStorage.getItem(LS_KEY);
+            if (!email || !sbClient) return;
+            try {
+                const { data, error } = await sbClient.rpc('app_login', { p_email: email });
+                if (error || !data || data.found !== true) return;
+                ACCESS = { email: data.email, unlocked: data.unlocked || [] };
+                localStorage.setItem(LS_KEY + '_unlocked', JSON.stringify(ACCESS.unlocked));
+                applyLocks();
+            } catch (e) { console.error(e); }
+        }
+
+        async function loadCatalog() {
+            if (!sbClient) return;
+            try {
+                const { data } = await sbClient.from('products')
+                    .select('code, name, description, checkout_url, price_label, sort_order')
+                    .eq('is_active', true).order('sort_order');
+                CATALOG = data || [];
+                applyLocks();
+            } catch (e) { console.error(e); }
+        }
+
+        // aplica cadeado/esmaecido nos cards nao liberados
+        function applyLocks() {
+            const unlocked = ACCESS.unlocked || [];
+            document.querySelectorAll('[data-code]').forEach(card => {
+                const code = card.getAttribute('data-code');
+                const liberado = unlocked.includes(code);
+                card.classList.toggle('is-locked', !liberado);
+                let badge = card.querySelector('.lock-badge');
+                if (!liberado && !badge) {
+                    badge = document.createElement('div');
+                    badge.className = 'lock-badge absolute top-4 right-5 text-white/90 text-xl';
+                    badge.innerHTML = '<i class="fa-solid fa-lock"></i>';
+                    card.appendChild(badge);
+                } else if (liberado && badge) {
+                    badge.remove();
+                }
+            });
+        }
+
+        // clique num card: libera ou abre a oferta
+        function handleCardClick(code, moduleId) {
+            if ((ACCESS.unlocked || []).includes(code)) {
+                if (moduleId) openModule(moduleId);
+                return;
+            }
+            const p = CATALOG.find(x => x.code === code) || {};
+            document.getElementById('lock-title').innerText = p.name || 'Conteudo bloqueado';
+            document.getElementById('lock-desc').innerText = p.description || 'Esta secao faz parte de um conteudo adicional.';
+            document.getElementById('lock-price').innerText = p.price_label || '';
+            const btn = document.getElementById('lock-cta');
+            if (p.checkout_url) {
+                btn.classList.remove('opacity-40', 'cursor-not-allowed');
+                btn.onclick = () => { window.location.href = p.checkout_url; };
+            } else {
+                btn.classList.add('opacity-40', 'cursor-not-allowed');
+                btn.onclick = null;
+            }
+            document.getElementById('lock-modal').classList.remove('hidden');
+        }
+
+        function closeLockModal() {
+            document.getElementById('lock-modal').classList.add('hidden');
+        }
+
+        // volta do checkout -> revalida (varios gatilhos: mobile nem sempre
+        // dispara visibilitychange de forma confiavel)
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') refreshAccess();
+        });
+        window.addEventListener('focus', refreshAccess);
+        window.addEventListener('pageshow', refreshAccess);
+
         function handleLogout() {
             localStorage.removeItem(LS_KEY);
+            localStorage.removeItem(LS_KEY + '_unlocked');
+            ACCESS = { email: null, unlocked: [] };
             checkSession();
         }
 
@@ -345,6 +455,14 @@
                 
                 // Update UI Info
                 document.getElementById('user-email-menu').innerText = userEmail;
+
+                // restaura acesso salvo e revalida no banco
+                try { ACCESS = { email: userEmail, unlocked: JSON.parse(localStorage.getItem(LS_KEY + '_unlocked') || '[]') }; }
+                catch (e) { ACCESS = { email: userEmail, unlocked: [] }; }
+                applyLocks();
+                loadCatalog();
+                refreshAccess();
+
                 let name = userEmail.split('@')[0];
                 name = name.charAt(0).toUpperCase() + name.slice(1);
                 document.getElementById('user-display-name').innerText = name;
