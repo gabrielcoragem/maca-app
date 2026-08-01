@@ -112,6 +112,41 @@
         .is-locked { filter: grayscale(0.75); opacity: 0.55; }
         .is-locked:active { transform: scale(0.98); }
         .lock-badge { pointer-events: none; }
+    
+        /* ================= EBOOK (scroll vertical) ================= */
+        .cx-cover{padding:8px 0 28px;border-bottom:2px solid rgba(44,74,82,.08);margin-bottom:28px}
+        .cx-cover-kicker{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(44,74,82,.45);font-weight:700;margin-bottom:10px}
+        .cx-cover-title{font-size:30px;line-height:1.15;font-weight:700;color:#2C4A52;margin-bottom:10px}
+        .cx-cover-sub{font-size:15px;line-height:1.6;color:rgba(44,74,82,.7)}
+        .cx-toc{background:#fff;border:2px solid rgba(44,74,82,.07);border-radius:24px;padding:20px 22px;margin-bottom:34px}
+        .cx-toc-h{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(44,74,82,.45);font-weight:700;margin-bottom:12px}
+        .cx-toc a{display:flex;gap:12px;align-items:baseline;padding:8px 0;font-size:14.5px;line-height:1.4;color:#2C4A52;font-weight:600;border-bottom:1px solid rgba(44,74,82,.06);text-decoration:none}
+        .cx-toc a:last-child{border-bottom:0}
+        .cx-toc a span{font-size:11px;font-weight:700;color:#CE6A4B;min-width:20px}
+        .cx-cap{padding-top:30px;margin-top:30px;border-top:2px solid rgba(44,74,82,.08);scroll-margin-top:16px}
+        .cx-cap.cx-first{border-top:0;margin-top:0;padding-top:0}
+        .cx-cap-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
+        .cx-cap-icon{width:46px;height:46px;border-radius:50%;background:#CE6A4B;color:#FDF8EC;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+        .cx-cap-num{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(44,74,82,.45);font-weight:700;margin-bottom:3px}
+        .cx-cap-title{font-size:22px;line-height:1.25;font-weight:700;color:#2C4A52}
+        .cx-body p{font-size:16px;line-height:1.75;color:rgba(44,74,82,.85);margin-bottom:15px}
+        .cx-body b{color:#2C4A52;font-weight:700}
+        .cx-body h4{font-size:16px;font-weight:700;color:#CE6A4B;margin:24px 0 10px;letter-spacing:.01em}
+        .cx-list,.cx-steps{margin:0 0 16px;padding-left:0;list-style:none}
+        .cx-list li{position:relative;padding-left:22px;margin-bottom:11px;font-size:15.5px;line-height:1.65;color:rgba(44,74,82,.85)}
+        .cx-list li::before{content:"";position:absolute;left:2px;top:9px;width:7px;height:7px;border-radius:50%;background:#CE6A4B}
+        .cx-steps{counter-reset:s}
+        .cx-steps li{counter-increment:s;position:relative;padding-left:34px;margin-bottom:13px;font-size:15.5px;line-height:1.65;color:rgba(44,74,82,.85)}
+        .cx-steps li::before{content:counter(s);position:absolute;left:0;top:1px;width:23px;height:23px;border-radius:50%;background:#2C4A52;color:#FDF8EC;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+        .cx-hi{background:#fff;border-left:5px solid #CE6A4B;border-radius:0 18px 18px 0;padding:16px 18px;margin:18px 0}
+        .cx-hi p{margin:0;font-size:16px}
+        .cx-warn{background:rgba(206,106,75,.09);border:1.5px solid rgba(206,106,75,.28);border-radius:18px;padding:16px 18px;margin:18px 0}
+        .cx-warn p{margin:0;font-size:15px;color:#8a3a22}
+        .cx-sol{background:rgba(44,74,82,.05);border-radius:14px;padding:12px 15px;font-size:15px !important;margin-bottom:14px !important}
+        .cx-tag{display:inline-block;background:rgba(206,106,75,.13);color:#CE6A4B;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:4px;white-space:nowrap}
+        .cx-end{text-align:center;padding:34px 0 10px;margin-top:30px;border-top:2px solid rgba(44,74,82,.08);color:rgba(44,74,82,.4);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+        .cx-end i{color:#319136;margin-right:6px}
+        @media (max-width:420px){.cx-cover-title{font-size:25px}.cx-cap-title{font-size:19px}.cx-body p{font-size:15.5px}}
     </style>
 <link rel="stylesheet" href="/index.css">
 </head>
@@ -265,7 +300,7 @@
                 </div>
             </div>
             <div id="player-content" class="flex-1 flex flex-col justify-start px-6 pt-6 pb-32 overflow-y-auto no-scrollbar scroll-smooth"></div>
-            <div class="fixed bottom-0 left-0 w-full p-6 pb-8 z-30 bg-gradient-to-t from-cream via-cream to-transparent pointer-events-none">
+            <div id="player-nav" class="fixed bottom-0 left-0 w-full p-6 pb-8 z-30 bg-gradient-to-t from-cream via-cream to-transparent pointer-events-none">
                 <div class="flex gap-4 pointer-events-auto max-w-md mx-auto">
                     <button id="btn-prev" onclick="prevPage()" class="w-16 h-16 rounded-2xl border-2 border-ink/10 bg-white text-ink/50 font-bold flex items-center justify-center disabled:opacity-0 transition-all shadow-sm"><i class="fa-solid fa-chevron-left"></i></button>
                     <button id="btn-next" onclick="nextPage()" class="flex-1 h-16 rounded-2xl bg-ink text-cream font-bold text-sm uppercase tracking-wider shadow-lg shadow-ink/20 active:scale-95 transition-transform flex items-center justify-center gap-2">Próximo</button>
@@ -487,13 +522,57 @@
                 title: "Ignição Asiática",
                 themeColor: "text-ink",
                 borderClass: "border-ink",
-                pages: [
-                    { title: "A Grande Ilusão", icon: "fa-eye-slash", text: "<b>CAPÍTULO 1: A Grande Ilusão e o Seu Despertar</b><br><br>Seja bem-vindo, campeão.<br><br>Se você está lendo estas páginas, significa que você deu um passo que 99% dos homens têm medo de dar. Você parou de aceitar as desculpas que a idade e o estresse tentam impor ao seu corpo. Você destravou a nossa aba secreta e garantiu o Protocolo de Ignição Asiática." },
-                    { title: "A Decisão", icon: "fa-trophy", text: "Parabéns pela decisão.<br><br>O valor que você investiu aqui é exatamente o que a indústria farmacêutica bilionária não quer que você descubra." },
-                    { title: "O Modelo Refém", icon: "fa-pills", text: "Pense bem: não é lucrativo para eles que você seja independente.<br><br>O modelo de negócios das “pílulas azuis” depende de você ser um refém. Eles querem que você precise comprar uma droga sintética, cheia de efeitos colaterais (dores de cabeça, visão embaçada, taquicardia), toda vez que quiser ter um momento íntimo com a sua parceira.<br><br>Eles mascaram o sintoma, mas nunca resolvem o problema na raiz." },
-                    { title: "Engenharia Pura", icon: "fa-flask-vial", text: "O que você tem em mãos agora não é um “suquinho” de internet.<br><br>É engenharia nutricional pura. É um compilado de conhecimento ancestral validado pela ciência moderna, desenhado para hackear a sua biologia e forçar o seu corpo a bombear sangue para onde realmente importa." },
-                    { title: "Você no Controle", icon: "fa-bolt", text: "A partir de agora, você está no controle.<br><br><b>O seu corpo está prestes a acordar.</b>" }
-                ]
+                layout: "ebook",
+                chapters: [
+                    {
+                                        "n": "01",
+                                        "title": "A Grande Ilusão e o Seu Despertar",
+                                        "icon": "fa-eye-slash",
+                                        "html": "<p><b>Seja bem-vindo, campeão.</b></p> <p>Se você está lendo estas páginas, significa que você deu um passo que 99% dos homens têm medo de dar. Você parou de aceitar as desculpas que a idade e o estresse tentam impor ao seu corpo. Você destravou a nossa aba secreta e garantiu o Protocolo de Ignição Asiática.</p> <p>Parabéns pela decisão. O valor que você investiu aqui é exatamente o que a indústria farmacêutica bilionária não quer que você descubra.</p> <p>Pense bem: não é lucrativo para eles que você seja independente. O modelo de negócios das “pílulas azuis” depende de você ser um refém. Eles querem que você precise comprar uma droga sintética, cheia de efeitos colaterais (dores de cabeça, visão embaçada, taquicardia), toda vez que quiser ter um momento íntimo com a sua parceira. Eles mascaram o sintoma, mas nunca resolvem o problema na raiz.</p> <p>O que você tem em mãos agora não é um “suquinho” de internet. É engenharia nutricional pura. É um compilado de conhecimento ancestral validado pela ciência moderna, desenhado para hackear a sua biologia e forçar o seu corpo a bombear sangue para onde realmente importa.</p> <div class=\"cx-hi\"><p>A partir de agora, você está no controle. <b>O seu corpo está prestes a acordar.</b></p></div>"
+                    },
+                    {
+                                        "n": "02",
+                                        "title": "O Seu Novo Motor V8 — A Ciência do Óxido Nítrico",
+                                        "icon": "fa-gauge-high",
+                                        "html": "<p>Para entender por que esse shake funciona como um interruptor de energia, você precisa entender a mecânica básica da sua anatomia.</p> <p>Para uma ereção ser dura como pedra e durar o tempo que você quiser, você precisa de apenas uma coisa circulando nas suas veias: <b>Óxido Nítrico (NO2)</b>.</p> <h4>O que é o Óxido Nítrico?</h4> <p>É um gás produzido naturalmente pelo seu corpo. Ele é o mensageiro químico que diz aos seus vasos sanguíneos: <i>“Relaxem e abram as portas”</i>. É ele quem causa a vasodilatação, permitindo que o sangue inunde a região pélvica e fique preso lá, mantendo a rigidez.</p> <h4>O Problema</h4> <p>A partir dos 30 anos, com o estresse do dia a dia, cortisol alto e alimentação desregulada, a sua produção natural de Óxido Nítrico despenca. Suas veias ficam “tensas” e o sangue simplesmente não chega com pressão suficiente.</p> <div class=\"cx-hi\"><p>É aqui que o Shake de Ignição entra. Ele não é mágica, é química. Ele age como uma bomba natural em <b>4 frentes simultâneas</b>, entregando os precursores exatos que o seu corpo perdeu a capacidade de produzir sozinho.</p></div>"
+                    },
+                    {
+                                        "n": "03",
+                                        "title": "Dissecando o Arsenal da Natureza",
+                                        "icon": "fa-flask-vial",
+                                        "html": "<p>Cada ingrediente deste protocolo foi escolhido com precisão cirúrgica. Nada está aqui por acaso ou apenas para “dar gosto”. Vamos dissecar o que vai entrar no seu sistema:</p> <h4>1. O Segredo “Asiático” — A Romã Pura</h4> <p>Nativa da antiga Pérsia e reverenciada na Ásia há milênios, a romã é o “escudo” blindado da nossa receita. O óxido nítrico é um gás volátil: age rápido, mas também se dissipa rápido no corpo — é por isso que muitas ereções “caem” no meio do ato. A romã é riquíssima em antioxidantes específicos que blindam e protegem a molécula de NO2 da oxidação. Ela garante que a sua ereção se mantenha rígida por muito mais tempo.</p> <div class=\"cx-warn\"><p><b>Atenção:</b> se você faz uso de Maca Peruana (e você deveria), a romã atua como o catalisador perfeito. Ela limpa o terreno oxidativo do corpo, potencializando e multiplicando a taxa de absorção dos ativos da Maca Peruana no seu organismo. É uma sinergia perfeita.</p></div> <h4>2. O “Viagra Natural” — A Melancia Tática</h4> <p>Esqueça a parte vermelha e doce. O segredo militar da melancia está na <b>parte branca</b>, aquela que fica colada na casca e que todo mundo joga fora. Essa região é uma das fontes naturais mais ricas do planeta em <b>L-Citrulina</b> — um aminoácido raro que sobrevive aos ácidos do seu estômago e viaja direto para os rins, onde o seu corpo a converte em L-Arginina. O resultado? Um pico absurdo de óxido nítrico e uma vasodilatação forçada e 100% natural. Suas artérias se abrem como avenidas livres.</p> <h4>3. O Combustível Foguete — A Beterraba</h4> <p>Muitos atletas de elite tomam suco de beterraba antes de competições, e o motivo é simples: ela é uma bomba de <b>nitratos inorgânicos</b>. A mágica da beterraba é que a conversão em óxido nítrico não espera chegar no intestino; ela começa já na sua boca, misturada com a sua saliva. Em questão de minutos, o nitrato se transforma em nitrito e cai na corrente sanguínea. Suas veias ficarão mais aparentes e o fluxo sanguíneo será destravado de cima a baixo.</p> <h4>4. Os Ativadores de Efeito Imediato — Limão e Gengibre</h4> <p>Aqui é onde separamos os amadores dos profissionais. O <b>limão</b> entra com a Vitamina C, o ácido essencial para acelerar a quebra e a absorção de todos os nutrientes pesados acima. Mas o verdadeiro toque de mestre, o gatilho da arma, é o <b>gengibre em pó</b>: um termogênico violento. Cerca de 10 a 15 minutos após tomar o shake, ele vai acelerar seus batimentos de forma saudável. Você vai sentir o corpo esquentar e um leve formigamento nas extremidades.</p> <div class=\"cx-hi\"><p>Esse é o seu <b>sinal biológico</b> — a prova física imediata de que o motor V8 ligou e a fórmula já está correndo e dilatando as suas veias.</p></div>"
+                    },
+                    {
+                                        "n": "04",
+                                        "title": "A Receita Oficial e o Ritual de Preparo",
+                                        "icon": "fa-blender",
+                                        "html": "<p>Chega de teoria. Vá para a cozinha e separe seu arsenal. <b>Não altere as medidas e não pule nenhum ingrediente.</b> A química depende da proporção.</p> <h4>Os Ingredientes</h4> <ul class=\"cx-list\"> <li><b>1 fatia grossa de melancia</b> — corte pegando uma boa quantidade da parte branca junto com a polpa vermelha.</li> <li><b>1/2 beterraba crua</b> — descascada e cortada em cubos. Crua, nunca cozida, para não perder os nitratos.</li> <li><b>Sementes de 1/2 romã</b> — da fruta fresca. Se for absolutamente impossível achar na sua região, substitua por 50 ml de suco de romã 100% integral, sem açúcar.</li> <li><b>Suco de 1/2 limão</b> — espremido na hora.</li> <li><b>1 colher de chá cheia de gengibre em pó</b> — o pó é mais concentrado e de absorção mais rápida que a raiz in natura para este propósito.</li> <li><b>150 ml de água gelada</b> — ou água em temperatura ambiente com 3 cubos de gelo.</li> </ul> <h4>Modo de Preparo</h4> <ol class=\"cx-steps\"> <li>Jogue a beterraba, a parte branca e vermelha da melancia e a água no liquidificador.</li> <li>Bata na potência máxima por cerca de 1 minuto, até triturar bem a base dura.</li> <li>Adicione as sementes de romã, o suco de limão e a colher de gengibre em pó.</li> <li>Bata por mais 40 segundos.</li> </ol> <div class=\"cx-warn\"><p><b>Regra de ouro inquebrável: NÃO COE.</b> As fibras da beterraba e da melancia são a “cápsula” natural que cadencia a absorção dos nitratos no seu estômago. Se você coar, o fígado quebra os nutrientes rápido demais e o efeito vai embora. Beba tudo, sinta a textura. É o preço do resultado.</p></div>"
+                    },
+                    {
+                                        "n": "05",
+                                        "title": "O Protocolo Tático de Uso — A Hora do Show",
+                                        "icon": "fa-crosshairs",
+                                        "html": "<p>Para extrair o poder máximo da Ignição Asiática, o seu timing precisa ser o de um franco-atirador. Siga as instruções abaixo como uma lei militar:</p> <h4>01 · A Janela de Ouro (o timing)</h4> <p>Beba o shake inteiro, de uma só vez, <b>exatamente de 30 a 40 minutos antes</b> de ir para o quarto com ela. Esse é o tempo biológico exato que o seu fígado leva para quebrar os nutrientes táticos e inundar suas veias com Óxido Nítrico.</p> <h4>02 · Terreno Limpo (estado do estômago)</h4> <p>A absorção precisa ser expressa. Se você tomar o shake logo após um prato pesado (carne vermelha, feijoada, churrasco), o seu corpo vai estar usando todo o sangue na digestão e o shake fica preso no trânsito intestinal. Esteja com o estômago mais leve. Isso permite que a fórmula “fure a fila” e caia direto no sangue.</p> <h4>03 · O Alerta Térmico (o seu sinal verde)</h4> <p>Fique atento ao que acontece cerca de <b>15 minutos após o último gole</b>. Você vai notar um leve formigamento causado pelo gengibre e um calor subindo pelo centro do peito e pescoço. Quando sentir isso, sorria: é a prova física de que as suas artérias dilataram. O sistema vascular está pronto, com as portas abertas e a pressão no máximo.</p> <div class=\"cx-hi\"><p>A ciência não falha. A biologia do seu corpo foi projetada para funcionar com potência máxima — você só estava usando o combustível errado até hoje.</p></div>"
+                    },
+                    {
+                                        "n": "06",
+                                        "title": "O Código de Absorção Máxima — Como Não Destruir a Fórmula",
+                                        "icon": "fa-shield-halved",
+                                        "html": "<p>A diferença entre um amador e um homem que domina a própria biologia está nos detalhes. Você tem em mãos a receita de uma bomba de Óxido Nítrico, mas se preparar ou consumir do jeito errado, vai literalmente jogar os ativos ralo abaixo.</p> <p>Nutrientes precursores de testosterona e vasodilatação são extremamente sensíveis. Grave estas quatro regras de extração:</p> <h4>1. A Regra da Lâmina Fria (o inimigo oculto)</h4> <p>Liquidificadores giram em alta velocidade e geram calor por atrito. O calor é o maior inimigo da Vitamina C do limão e das enzimas ativas da beterraba. Se o shake esquentar durante o preparo, a oxidação destrói os nutrientes antes mesmo de chegarem ao seu estômago.</p> <p class=\"cx-sol\"><b>A solução:</b> use sempre água trincando de gelada ou adicione no mínimo 3 pedras de gelo antes de bater. O gelo anula o calor da lâmina e preserva a estrutura molecular da L-Citrulina e dos nitratos intacta.</p> <h4>2. A Lei do Consumo Imediato (o fator oxigênio)</h4> <p>Não tente ser “prático” fazendo uma jarra inteira no domingo para a semana. Precursores de Óxido Nítrico são altamente voláteis. A partir do momento em que os ingredientes são triturados e expostos ao oxigênio e à luz, um relógio de contagem regressiva começa a bater.</p> <p class=\"cx-sol\"><b>A solução:</b> a regra do <b>“bateu, tomou”</b>. Prepare a dose exata e consuma em no máximo 10 minutos após desligar o liquidificador. A geladeira não vai salvar os nutrientes para o dia seguinte.</p> <h4>3. O Erro Fatal do Enxaguante Bucal</h4> <p>Este é o segredo que 99% dos médicos não te contam. Lembra que a beterraba é o seu combustível foguete cheio de nitratos inorgânicos? A conversão desse nitrato em Óxido Nítrico não acontece no estômago — ela começa na sua boca, graças a bactérias específicas que vivem na sua língua.</p> <p class=\"cx-sol\"><b>A solução:</b> nunca, sob hipótese alguma, use enxaguantes bucais (tipo Listerine) nas <b>12 horas antes</b> de tomar o shake. O álcool e os bactericidas matam a flora bucal — e sem ela a beterraba perde todo o efeito vasodilatador.</p> <h4>4. O Truque da “Mastigação Líquida”</h4> <p>A sua intuição vai mandar engolir o shake de uma vez, goela abaixo. Não faça isso. Para ativar as bactérias da língua, os nitratos precisam entrar em contato com a sua saliva.</p> <p class=\"cx-sol\"><b>A solução:</b> ao dar o gole, deixe o líquido “passear” pela boca por 3 a 5 segundos antes de engolir. Dê uma leve “mastigada” no líquido. Isso mistura o shake com a amilase da saliva, iniciando a pré-digestão e acelerando a entrada do Óxido Nítrico na corrente sanguínea.</p>"
+                    },
+                    {
+                                        "n": "07",
+                                        "title": "O Arsenal Secundário — Táticas Isoladas de Manutenção",
+                                        "icon": "fa-toolbox",
+                                        "html": "<p>Você já tem o protocolo principal, a “bomba atômica” para a hora do show. Mas e nos outros dias da semana? Um homem que domina a própria biologia não espera o momento de ir para o quarto para ligar o motor; ele mantém o tanque cheio o tempo todo.</p> <p>Se por algum motivo você não puder preparar o Shake de Ignição completo, ou se quiser manter os seus níveis de Óxido Nítrico no limite máximo de segunda a segunda, aqui estão as táticas de extração isolada. Trate como a manutenção diária do seu maquinário.</p> <h4>1. O Soro de Citrulina — tática da melancia</h4> <p><b>O alvo:</b> manutenção do fluxo sanguíneo pélvico basal.</p> <p><b>Ingredientes:</b> 2 fatias grossas exclusivamente da parte branca da melancia (a colada na casca verde); 1 copo de água extremamente gelada (200 ml); folhas de hortelã frescas (opcional, atua como vasodilatador periférico leve).</p> <p><b>Execução:</b> bata tudo em potência máxima até virar um líquido homogêneo. Como a parte branca tem muita fibra resistente, aqui você pode usar uma peneira grossa apenas para tirar os pedaços maiores — mas beba imediatamente.</p> <p class=\"cx-sol\"><b>Quando usar:</b> no meio da tarde, com o estômago vazio. Funciona como um “soro” contínuo para manter suas veias relaxadas.</p> <h4>2. O Tiro de Nitrato — tática da beterraba</h4> <p><b>O alvo:</b> vasodilatação rápida e veias saltadas.</p> <p><b>Ingredientes:</b> 1/4 de beterraba crua ralada bem fina; 50 ml de água mineral.</p> <p><b>Execução:</b> coloque a beterraba ralada e a água em um copo pequeno. Amasse bem com um pilão (como se fizesse uma caipirinha) para forçar a quebra das células e a liberação do suco roxo concentrado.</p> <p class=\"cx-sol\"><b>O segredo:</b> não coe e não engula direto. Beba esse shot e <b>mastigue os fiapos por pelo menos 30 segundos</b> antes de engolir — a conversão do nitrato começa com as bactérias da sua saliva.</p> <p class=\"cx-sol\"><b>Quando usar:</b> 40 minutos antes de um treino pesado ou como gatilho de emergência antes do sexo.</p> <h4>3. O Elixir Persa — tática da romã</h4> <p><b>O alvo:</b> blindagem antioxidante e prolongamento do ato.</p> <p><b>Ingredientes:</b> 3 colheres de sopa cheias de sementes de romã frescas; 1 copo de água gelada.</p> <p><b>Execução:</b> técnica de maceração a frio. Coloque as sementes no fundo do copo e amasse levemente com uma colher apenas para estourar as bolsas de suco, sem quebrar os caroços internos (que são amargos). Adicione a água gelada, misture bem e beba tudo.</p> <p class=\"cx-sol\"><b>Quando usar:</b> ao acordar ou antes de dormir. É o seu seguro de vida vascular.</p> <h4>4. O Desfibrilador Matinal — tática do limão e gengibre</h4> <p><b>O alvo:</b> termogênese imediata e choque de Vitamina C para absorção.</p> <p><b>Ingredientes:</b> suco de 1 limão espremido na hora; 1 colher de café de gengibre em pó; 1 pitada de sal integral (rosa ou marinho puro) — o sal fornece minerais que conduzem a eletricidade das suas células nervosas.</p> <p><b>Execução:</b> misture tudo num copinho de shot. <b>Não adicione água.</b> Vai descer queimando levemente a garganta e, em menos de 5 minutos, você sente um calor se espalhando pelo estômago e subindo para o peito.</p> <p class=\"cx-sol\"><b>Quando usar:</b> em jejum, nos primeiros 10 minutos após acordar. É o comando físico de “acorda e trabalha” que você dá ao seu corpo.</p>"
+                    },
+                    {
+                                        "n": "08",
+                                        "title": "Lista de Compras e Checklist Rápido",
+                                        "icon": "fa-cart-shopping",
+                                        "html": "<p>Material de apoio para você não errar na hora H.</p> <h4>Lista de compras — 1 dose completa</h4> <ul class=\"cx-list\"> <li>Melancia — 1 fatia grossa <span class=\"cx-tag\">com a parte branca</span></li> <li>Beterraba crua — 1/2 unidade <span class=\"cx-tag\">nunca cozida</span></li> <li>Romã — 1/2 unidade fresca <span class=\"cx-tag\">ou 50 ml de suco integral</span></li> <li>Limão — 1/2 unidade</li> <li>Gengibre em pó — 1 colher de chá cheia</li> <li>Gelo — no mínimo 3 pedras</li> </ul> <h4>Checklist do ritual</h4> <ol class=\"cx-steps\"> <li>Nas 12h antes: <b>zero enxaguante bucal</b>.</li> <li>Estômago leve — sem prato pesado antes.</li> <li>Água gelada ou gelo no copo do liquidificador.</li> <li>Bater · <b>não coar</b> · beber em até 10 minutos.</li> <li>Cada gole: 3 a 5 segundos na boca antes de engolir.</li> <li>Tomar de 30 a 40 minutos antes.</li> <li>Aos ~15 minutos: calor no peito e formigamento = sinal verde.</li> </ol> <h4>Os 5 erros que anulam a fórmula</h4> <ul class=\"cx-list\"> <li><b>Coar o shake</b> — tira a fibra que cadencia a absorção.</li> <li><b>Fazer jarra para a semana</b> — os precursores oxidam.</li> <li><b>Enxaguante bucal</b> — mata a flora que converte o nitrato.</li> <li><b>Beterraba cozida</b> — o calor destrói os nitratos.</li> <li><b>Engolir de uma vez</b> — pula a etapa da saliva.</li> </ul> <div class=\"cx-warn\"><p>Conteúdo educativo. Não substitui acompanhamento médico. Se você tem pressão alta, diabetes, problemas renais ou usa medicação contínua — em especial nitratos ou remédios para pressão — converse com o seu médico antes de iniciar.</p></div>"
+                    }
+]
             },
             maca: {
                 title: "Protocolo Vital",
@@ -612,9 +691,25 @@
 
         function renderPage() {
             const data = modulesData[activeModuleId];
-            const pageData = data.pages[activePageIndex];
             const container = document.getElementById('player-content');
-            
+            const navBar = document.getElementById('player-nav');
+
+            // --- modo ebook: rolagem vertical continua, sem paginacao ---
+            if (data.layout === 'ebook') {
+                container.scrollTop = 0;
+                document.getElementById('player-title').innerText = data.title;
+                document.getElementById('player-counter').innerText = `${data.chapters.length} CAPS`;
+                if (navBar) navBar.classList.add('hidden');
+                container.classList.remove('pb-32');
+                container.classList.add('pb-12');
+                renderEbook(container, data);
+                return;
+            }
+            if (navBar) navBar.classList.remove('hidden');
+            container.classList.add('pb-32');
+            container.classList.remove('pb-12');
+
+            const pageData = data.pages[activePageIndex];
             container.scrollTop = 0; // Reset scroll
 
             document.getElementById('player-title').innerText = data.title;
@@ -637,6 +732,47 @@
             if (pageData.type === 'calculator') renderCalculator(container);
             else if (pageData.type === 'master-summary') renderMasterSummary(container, pageData, data.themeColor, data.borderClass);
             else renderStandardPage(container, pageData);
+        }
+
+        function renderEbook(container, data) {
+            const caps = data.chapters.map((c, i) => `
+                <article class="cx-cap ${i === 0 ? 'cx-first' : ''}">
+                    <div class="cx-cap-head">
+                        <div class="cx-cap-icon"><i class="fa-solid ${c.icon}"></i></div>
+                        <div>
+                            <div class="cx-cap-num">Capítulo ${c.n}</div>
+                            <h3 class="cx-cap-title">${c.title}</h3>
+                        </div>
+                    </div>
+                    <div class="cx-body">${c.html}</div>
+                </article>`).join('');
+
+            container.innerHTML = `
+                <div class="animate-fade-in w-full max-w-2xl mx-auto text-left">
+                    <div class="cx-cover">
+                        <p class="cx-cover-kicker">Protocolo</p>
+                        <h2 class="cx-cover-title">O Protocolo de Ignição Asiática</h2>
+                        <p class="cx-cover-sub">O guia definitivo para reativar o seu fluxo sanguíneo e assumir o controle da sua biologia.</p>
+                    </div>
+                    <nav class="cx-toc">
+                        <p class="cx-toc-h">Neste guia</p>
+                        ${data.chapters.map(c => `<a href="#cap-${c.n}" onclick="scrollToCap(event,'${c.n}')"><span>${c.n}</span>${c.title}</a>`).join('')}
+                    </nav>
+                    ${caps}
+                    <div class="cx-end"><i class="fa-solid fa-check"></i> Fim do guia</div>
+                </div>`;
+
+            // ancoras
+            container.querySelectorAll('.cx-cap').forEach((el, i) => el.id = 'cap-' + data.chapters[i].n);
+        }
+
+        function scrollToCap(e, n) {
+            e.preventDefault();
+            const el = document.getElementById('cap-' + n);
+            const box = document.getElementById('player-content');
+            if (!el || !box) return;
+            const delta = el.getBoundingClientRect().top - box.getBoundingClientRect().top;
+            box.scrollTo({ top: box.scrollTop + delta - 12, behavior: 'smooth' });
         }
 
         function renderStandardPage(container, data) {
